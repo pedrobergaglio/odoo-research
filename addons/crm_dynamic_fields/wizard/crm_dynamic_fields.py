@@ -136,6 +136,7 @@ class CRMDynamicFields(models.TransientModel):
         soup = BeautifulSoup(view_arch, 'html.parser')
         fields_all = soup.find_all('field',
                                    attrs={"name": self.position_field_id.name})
+        
         for field in fields_all:
             if field.parent.name == "div":
                 parent_div = field.parent
