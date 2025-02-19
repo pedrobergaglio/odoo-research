@@ -1,8 +1,0 @@
-## Module <hide_chatter>
-
-#### 12.01.2024
-#### Version 18.0.1.0.0
-##### ADD
-
-- Initial Commit for Hide Chatter
-- Adapted for Odoo 18.0
