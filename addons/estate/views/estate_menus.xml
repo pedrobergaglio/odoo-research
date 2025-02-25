@@ -1,0 +1,13 @@
+<?xml version="1.0"?>
+<odoo><data>
+<menuitem id="test_menu_root" name="Propiedades">
+        <menuitem id="test_model_menu_action" action="property_test_action"/>
+        
+        <menuitem id="test_config_menu_root" name="Configuración">
+                <menuitem id="types_action_id" action="property_types_action"/> 
+                <menuitem id="tags_action_id" action="property_tags_action"/> 
+        </menuitem>     
+
+</menuitem>
+
+</data></odoo>

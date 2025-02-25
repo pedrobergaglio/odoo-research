@@ -1,0 +1,21 @@
+<?xml version="1.0"?>
+<odoo><data>
+    <record id="property_test_action" model="ir.actions.act_window">
+        <field name="name">Propiedades</field>
+        <field name="res_model">estate.property</field>
+        <field name="view_mode">list,form</field>
+    </record>
+
+    <record id="property_types_action" model="ir.actions.act_window">
+        <field name="name">Propiedades</field>
+        <field name="res_model">estate.property.type</field>
+        <field name="view_mode">list,form</field>
+    </record>
+
+    <record id="property_tags_action" model="ir.actions.act_window">
+        <field name="name">Tags</field>
+        <field name="res_model">estate.property.tag</field>
+        <field name="view_mode">list,form</field>
+    </record>
+    
+</data></odoo>
