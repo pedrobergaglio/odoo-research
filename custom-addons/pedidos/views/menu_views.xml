@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <!-- Menú principal para la app de Pedidos -->
+    <menuitem id="menu_pedidos_root" 
+              name="Pedidos"
+              web_icon="pedidos,static/description/icon.png"
+              sequence="5"
+              action="action_pedidos"
+              />
+
+    <!-- Submenús principales -->
+    <menuitem id="menu_pedidos"
+              name="Pedidos"
+              parent="menu_pedidos_root"
+              sequence="10"/>
+
+    <menuitem id="menu_pedidos_configuracion"
+              name="Configuración"
+              parent="menu_pedidos_root"
+              sequence="100"
+              groups="group_pedidos_manager"/>
+
+    <!-- Submenús para acciones -->
+
+    <menuitem id="menu_sale_order_types"
+              name="Tipos de Orden"
+              parent="menu_pedidos_configuracion"
+              action="action_sale_order_type"
+              sequence="10"/>
+
+    <!-- Crear datos iniciales para los tipos de orden -->
+    <record id="sale_order_type_pedido" model="sale.order.type">
+        <field name="name">Pedido</field>
+        <field name="code">pedido</field>
+        <field name="description">Orden de tipo Pedido</field>
+    </record>
+</odoo>

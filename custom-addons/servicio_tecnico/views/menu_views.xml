@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <!-- Menú principal para la app de Servicio Técnico -->
+    <menuitem id="menu_servicio_tecnico_root" 
+              name="Servicio Técnico"
+              web_icon="servicio_tecnico,static/description/icon.png"
+              sequence="5"
+              action="action_servicios_tecnicos"
+              />
+    <!-- Submenús principales -->
+    <menuitem id="menu_servicios"
+              name="Servicios"
+              parent="menu_servicio_tecnico_root"
+              sequence="10"/>
+
+    <menuitem id="menu_servicios_configuracion"
+              name="Configuración"
+              parent="menu_servicio_tecnico_root"
+              sequence="100"
+              groups="group_servicio_tecnico_manager"/>
+
+    <!-- Submenús para acciones -->
+    <!--
+    <menuitem id="menu_servicios_orders"
+              name="Servicios Técnicos"
+              parent="menu_servicios"
+              action="action_servicios_tecnicos"
+              sequence="10"/>
+    -->
+    <menuitem id="menu_service_order_types"
+              name="Tipos de Servicio"
+              parent="menu_servicios_configuracion"
+              action="action_service_order_type"
+              sequence="10"/>
+
+    <!-- Crear datos iniciales para los tipos de servicio -->
+    <record id="service_order_type_tecnico" model="service.order.type">
+        <field name="name">Servicio Técnico</field>
+        <field name="code">servicio</field>
+        <field name="description">Orden de tipo Servicio Técnico</field>
+    </record>
+</odoo>

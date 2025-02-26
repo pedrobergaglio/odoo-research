@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="module_pedidos_category" model="ir.module.category">
+        <field name="name">Pedidos</field>
+        <field name="description">Gestión de Pedidos</field>
+        <field name="sequence">20</field>
+    </record>
+
+    <record id="group_pedidos_user" model="res.groups">
+        <field name="name">Usuario</field>
+        <field name="category_id" ref="module_pedidos_category"/>
+        <field name="implied_ids" eval="[(4, ref('base.group_user'))]"/>
+    </record>
+
+    <record id="group_pedidos_manager" model="res.groups">
+        <field name="name">Responsable</field>
+        <field name="category_id" ref="module_pedidos_category"/>
+        <field name="implied_ids" eval="[(4, ref('group_pedidos_user'))]"/>
+        <field name="users" eval="[(4, ref('base.user_root')), (4, ref('base.user_admin'))]"/>
+    </record>
+</odoo>

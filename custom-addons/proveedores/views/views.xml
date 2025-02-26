@@ -1,0 +1,62 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <!-- Heredar la vista de formulario de contacto para añadir nuestro campo -->
+    <record id="view_partner_form_inherit_proveedor" model="ir.ui.view">
+        <field name="name">res.partner.form.inherit.proveedor</field>
+        <field name="model">res.partner</field>
+        <field name="inherit_id" ref="base.view_partner_form"/>
+        <field name="arch" type="xml">
+            <field name="vat" position="after">
+                <field name="partner_type" widget="radio"/>
+            </field>
+        </field>
+    </record>
+    
+    <!-- Vista de búsqueda personalizada -->
+    <record id="view_res_partner_filter_proveedor" model="ir.ui.view">
+        <field name="name">res.partner.select.proveedor</field>
+        <field name="model">res.partner</field>
+        <field name="arch" type="xml">
+            <search>
+                <field name="name" string="Nombre"/>
+                <field name="email" string="Email"/>
+                <field name="phone" string="Teléfono"/>
+                <filter string="Clientes" name="customers" domain="[('customer_rank','>',0)]"/>
+                <filter string="Proveedores" name="suppliers" domain="[('supplier_rank','>',0)]"/>
+                <filter string="Ambos" name="both" domain="[('customer_rank','>',0), ('supplier_rank','>',0)]"/>
+                <group expand="0" string="Agrupar Por">
+                    <filter string="Tipo de Contacto" name="partner_type" context="{'group_by': 'partner_type'}"/>
+                </group>
+            </search>
+        </field>
+    </record>
+
+    <!-- Acción para mostrar proveedores con filtro predeterminado -->
+    <record id="action_proveedores" model="ir.actions.act_window">
+        <field name="name">Proveedores</field>
+        <field name="type">ir.actions.act_window</field>
+        <field name="res_model">res.partner</field>
+        <field name="view_mode">kanban,list,form</field>
+        <field name="domain">[('supplier_rank','>',0)]</field>
+        <field name="context">{'search_default_suppliers': 1, 'default_supplier_rank': 1}</field>
+        <field name="search_view_id" ref="view_res_partner_filter_proveedor"/>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_smiling_face">
+                Crear un nuevo proveedor
+            </p>
+        </field>
+    </record>
+
+    <!-- Menú principal de la app -->
+    <menuitem id="menu_proveedores_root" 
+              name="Proveedores" 
+              sequence="11" 
+              web_icon="mi_modulo_proveedores,static/description/icon.png"/>
+              
+    <!-- Submenú para proveedores -->
+    <menuitem id="menu_proveedores"
+              name="Proveedores"
+              parent="menu_proveedores_root"
+              action="action_proveedores"
+              sequence="1"/>
+</odoo>
