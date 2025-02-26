@@ -64,7 +64,7 @@ class ProductTemplate(models.Model):
             ('combo', "Combo"),
         ],
         required=True,
-        default='consu',
+        default='consu'
     )
     combo_ids = fields.Many2many(
         string="Combo Choices", comodel_name='product.combo', check_company=True

@@ -41,7 +41,7 @@
             <field name="model">product.product</field>
             <field name="inherit_id" ref="product.product_product_tree_view"/>
             <field name="arch" type="xml">
-                <field name="type" position="after">
+                <field name="type" position="after" invisible="1">
                     <field name="qty_available" invisible="not is_storable" string="On Hand" optional="show" decoration-danger="virtual_available &lt; 0" decoration-warning="virtual_available == 0" decoration-bf="1" groups="stock.group_stock_user"/>
                     <field name="virtual_available" invisible="not is_storable" string="Forecasted" optional="show" decoration-danger="virtual_available &lt; 0" decoration-warning="virtual_available == 0" groups="stock.group_stock_user"/>
                 </field>
@@ -280,7 +280,7 @@
             <field name="arch" type="xml">
                 <data>
                     <xpath expr="//header/button" position="before">
-                        <button string="Update Quantityyyyy" type="object"
+                        <button string="Update Quantity" type="object"
                             name="action_update_quantity_on_hand"
                             invisible="not is_storable"/>
                         <button string="Replenish" type="action"

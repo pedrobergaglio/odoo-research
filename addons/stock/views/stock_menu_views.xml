@@ -47,5 +47,4 @@
 
     <menuitem id="stock.menu_warehouse_report" name="Reporting" sequence="99" parent="stock.menu_stock_root" groups="group_stock_manager" active="False"/>
 
-
 </odoo>

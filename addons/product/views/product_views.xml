@@ -80,8 +80,9 @@
                             <label for="purchase_ok"/>
                         </span>
                     </div>
+                    <!-- Aca estan declaradas las pestañas(<page>) de los details de products (<notebook> seria el detail )-->
                     <notebook>
-                        <page string="General Information" name="general_information">
+                        <page string="Product Details" name="general_information">
                             <group>
                                 <group name="group_general">
                                     <field name="active" invisible="1"/>
@@ -171,7 +172,8 @@
                                 <field colspan="2" name="description" nolabel="1" placeholder="This note is only for internal purposes."/>
                             </group>
                         </page>
-                        <page string="Sales" name="sales" invisible="1 or not sale_ok">
+                        <!-- Ventana de sales en product details-->
+                        <page string="Ventas" name="sales" invisible="1">
                             <group name="sale">
                                 <group string="Upsell &amp; Cross-Sell" name="upsell" invisible="1"/>
                                 <group name="extra_info" string="Extra Info">
@@ -184,6 +186,7 @@
                                 </group>
                             </group>
                         </page>
+                        
                         <page
                             string="Purchase"
                             name="purchase"
@@ -200,7 +203,7 @@
                             string="Inventory"
                             name="inventory"
                             groups="product.group_stock_packaging"
-                            invisible="type in ['service', 'combo']"
+                            invisible="1"
                         >
                             <group name="inventory">
                                 <group name="group_lots_and_weight" string="Logistics" invisible="type != 'consu'">
@@ -229,6 +232,18 @@
             </form>
         </field>
     </record>
+    <!-- Vista heredada para ocultar la pestaña de sales-->
+    <record id="view_product_form_inherit" model="ir.ui.view">
+        <field name="name">product.form.hide.sales</field>
+        <field name="model">product.template</field>
+        <field name="inherit_id" ref="product.product_template_form_view"/>
+        <field name="arch" type="xml">
+            <xpath expr="//page[@name='sales']" position="attributes">
+                <attribute name="invisible">1</attribute>
+            </xpath>
+        </field>
+    </record>
+
 
     <record id="product_template_search_view" model="ir.ui.view">
         <field name="name">product.template.search</field>
