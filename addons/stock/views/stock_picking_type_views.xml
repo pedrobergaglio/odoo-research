@@ -36,7 +36,9 @@
         action="stock_picking_type_action"
         id="stock_picking_type_menu"
         parent="menu_stock_root" sequence="0"
-        name="Overview"/>
+        name="Overview"
+        active="False"
+        />
 
     <record id="view_pickingtype_filter" model="ir.ui.view">
         <field name="name">stock.picking.type.filter</field>

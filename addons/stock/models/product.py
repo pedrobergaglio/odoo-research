@@ -674,6 +674,12 @@ class ProductTemplate(models.Model):
     _inherit = 'product.template'
     _check_company_auto = True
 
+    custom_category_id = fields.Many2one(
+        'product.category',
+        string="Categoría Personalizada",
+        store=True,
+        ondelete='cascade'
+    )
     is_storable = fields.Boolean(
         'Track Inventory', store=True, compute='compute_is_storable', readonly=False,
         default=False, precompute=True, help='A storable product is a product for which you manage stock.')

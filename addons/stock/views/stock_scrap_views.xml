@@ -74,8 +74,7 @@
                                 <field name="company_id" groups="base.group_multi_company" readonly="state == 'done'"/>
                             </group>
                         </group>
-                    </sheet>
-                    <chatter/>
+                         </sheet>
                 </form>
             </field>
         </record>

@@ -65,7 +65,6 @@
         'wizard/stock_label_type.xml',
         'wizard/stock_lot_label_layout.xml',
         'wizard/stock_quant_relocate.xml',
-
         'views/res_partner_views.xml',
         'views/product_strategy_views.xml',
         'views/stock_lot_views.xml',
@@ -87,6 +86,7 @@
         'views/stock_package_level_views.xml',
         'views/stock_package_type_view.xml',
         'views/stock_forecasted.xml',
+        
     ],
     'installable': True,
     'application': True,
