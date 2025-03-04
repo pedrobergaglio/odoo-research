@@ -168,7 +168,7 @@
                                     <field name="product_variant_id" invisible="1"/>
                                 </group>
                             </group>
-                            <group name="internal_notes" string="Internal Notes">
+                            <group name="internal_notes" string="Internal Notes" invisible="1">
                                 <field colspan="2" name="description" nolabel="1" placeholder="This note is only for internal purposes."/>
                             </group>
                         </page>

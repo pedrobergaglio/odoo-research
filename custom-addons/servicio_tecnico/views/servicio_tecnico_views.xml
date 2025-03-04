@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <odoo>
-    <!-- Tipos de Orden de Servicio -->
+    <!-- Tipos de Servicio -->
     <record id="view_service_order_type_form" model="ir.ui.view">
         <field name="name">service.order.type.form</field>
         <field name="model">service.order.type</field>
@@ -20,8 +20,8 @@
         </field>
     </record>
 
-    <record id="view_service_order_type_list" model="ir.ui.view">
-        <field name="name">service.order.type.list</field>
+    <record id="view_service_order_type_tree" model="ir.ui.view">
+        <field name="name">service.order.type.tree</field>
         <field name="model">service.order.type</field>
         <field name="type">list</field>
         <field name="arch" type="xml">
@@ -52,13 +52,15 @@
         </field>
     </record>
 
-    <!-- Vista de servicios técnicos (órdenes filtradas por tipo Servicio) -->
+    <!-- Vista de servicios técnicos (órdenes filtradas por tipo Servicio Técnico) -->
     <record id="action_servicios_tecnicos" model="ir.actions.act_window">
         <field name="name">Servicios Técnicos</field>
         <field name="res_model">sale.order</field>
         <field name="view_mode">list,form,calendar,pivot,graph,activity</field>
         <field name="domain">[('is_service', '=', True)]</field>
-        <field name="context" eval="{'default_service_type_id': ref('servicio_tecnico.service_order_type_tecnico')}"/>
+        <!--<field name="context">{'default_service_type_id': ref('servicio_tecnico.service_order_type_tecnico')}</field>-->
+        <field name="context" eval="{'default_service_type_id': ref('servicio_tecnico.service_order_type_tecnico')}"/>        
+
         <field name="help" type="html">
             <p class="o_view_nocontent_smiling_face">
                 Crea tu primer servicio técnico

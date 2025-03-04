@@ -11,7 +11,9 @@
         name="Dashboards"
         action="ir_actions_dashboard_action"
         web_icon="spreadsheet_dashboard,static/description/icon.png"
-        sequence="37"/>
+        sequence="37"
+        active="False"
+        />
 
     <menuitem
         id="spreadsheet_dashboard_menu_dashboard"

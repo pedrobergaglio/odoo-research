@@ -288,7 +288,7 @@
                                             </group>
                                         </group>
                                         <group>
-                                            <field name="comment" placeholder="Internal notes..." nolabel="1"/>
+                                            <field name="comment" placeholder="Internal notes..." nolabel="1" invisible="1"/>
                                         </group>
                                         <field name="lang" invisible="True"/>  <!-- Need to add lang to save default value from parented record -->
                                     </sheet>
@@ -311,7 +311,7 @@
                                 </group>
                             </group>
                         </page>
-                        <page name='internal_notes' string="Internal Notes">
+                        <page name='internal_notes' string="Internal Notes" invisible="1">
                             <field name="comment" placeholder="Internal notes..."/>
                         </page>
                     </notebook>

@@ -318,10 +318,24 @@ class SaleOrder(models.Model):
     show_update_pricelist = fields.Boolean(
         string="Has Pricelist Changed", store=False)  # True if the pricelist was changed
 
+    service_type_id = fields.Many2one('service.order.type', string='Type of Service', 
+                                   tracking=True,
+                                   help="Identifica el tipo de servicio técnico")
+    is_service = fields.Boolean('Is technical ser vice', compute='_compute_is_service', store=True)
+
     def init(self):
         create_index(self._cr, 'sale_order_date_order_id_idx', 'sale_order', ["date_order desc", "id desc"])
 
     #=== COMPUTE METHODS ===#
+
+    @api.depends('service_type_id')
+    def _compute_is_service(self):
+        for order in self:
+            service_type = self.env.ref('servicio_tecnico.service_order_type_tecnico', False)
+            if service_type and order.service_type_id:
+                order.is_service = order.service_type_id.id == service_type.id
+            else:
+                order.is_service = False
 
     @api.depends('partner_id')
     @api.depends_context('sale_show_partner_name')

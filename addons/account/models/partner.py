@@ -340,6 +340,9 @@ class ResPartner(models.Model):
     fiscal_country_codes = fields.Char(compute='_compute_fiscal_country_codes')
     partner_vat_placeholder = fields.Char(compute='_compute_partner_vat_placeholder')
 
+    
+    
+
     @api.depends('company_id')
     @api.depends_context('allowed_company_ids')
     def _compute_fiscal_country_codes(self):

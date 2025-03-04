@@ -14,14 +14,22 @@
         <field name="model">price.update.wizard</field>
         <field name="arch" type="xml">
             <form string="Actualización de Precios por Categoría">
-                <p>Seleccione una categoria para aplicar el porcentaje y el porcentaje en cuestion.</p>
+                <p>Seleccione las categorías para aplicar el porcentaje y el porcentaje en cuestión.</p>
                 <group>
-                    <field name="category_id"/>
+                    <field name="category_ids" 
+                           widget="many2many_tags" 
+                           options="{'no_create': True}"
+                           help="Puedes seleccionar múltiples categorías. Se incluirán todas las subcategorías."/>
                     <field name="percentage"/>
                 </group>
                 <footer>
-                    <button string="Actualizar Precios" name="action_update_prices" type="object" class="btn-primary"/>
-                    <button string="Cancelar" class="btn-secondary" special="cancel"/>
+                    <button string="Actualizar Precios" 
+                            name="action_update_prices" 
+                            type="object" 
+                            class="btn-primary"/>
+                    <button string="Cancelar" 
+                            class="btn-secondary" 
+                            special="cancel"/>
                 </footer>
             </form>
         </field>

@@ -52,7 +52,8 @@
     <menuitem id="menu_clientes_root" 
               name="Clientes" 
               sequence="10" 
-              web_icon="mi_modulo_clientes,static/description/icon.png"/>
+              web_icon="mi_modulo_clientes,static/description/icon.png"
+              />
               
     <!-- Submenú para clientes -->
     <menuitem id="menu_clientes"

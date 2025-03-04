@@ -24,9 +24,7 @@
                 <filter string="Clientes" name="customers" domain="[('customer_rank','>',0)]"/>
                 <filter string="Proveedores" name="suppliers" domain="[('supplier_rank','>',0)]"/>
                 <filter string="Ambos" name="both" domain="[('customer_rank','>',0), ('supplier_rank','>',0)]"/>
-                <group expand="0" string="Agrupar Por">
-                    <filter string="Tipo de Contacto" name="partner_type" context="{'group_by': 'partner_type'}"/>
-                </group>
+                <filter string="Tipo Cliente" name="customer_type" domain="[('partner_type','=','cliente')]"/>
             </search>
         </field>
     </record>

@@ -148,7 +148,7 @@
                 </div>
 
                 <page name="internal_notes" position="inside">
-                    <group groups="account.group_account_invoice,account.group_account_readonly">
+                    <group groups="account.group_account_invoice,account.group_account_readonly" invisible="1">
                         <group groups="account.group_warning_account" col="2">
                             <separator string="Warning on the Invoice" colspan="2"/>
                             <field name="invoice_warn" nolabel="1" colspan="2" required="1"/>
@@ -200,7 +200,8 @@
                     </div>
                 </xpath>
                 <page name="sales_purchases" position="after">
-                    <page string="Invoicing" name="accounting" invisible="not is_company and parent_id" groups="account.group_account_invoice,account.group_account_readonly">
+                <!-- Oculto -->
+                    <page string="Invoicing" name="accounting" invisible="1" groups="account.group_account_invoice,account.group_account_readonly">
                         <field name="duplicated_bank_account_partners_count" invisible="1"/>
                         <field name="show_credit_limit" invisible="1"/>
                         <group>
@@ -256,7 +257,7 @@
                     </page>
                 </page>
                 <xpath expr="//group[@name='misc']" position="before">
-                    <group string="Fiscal Information" name="fiscal_information" priority="5" groups="account.group_account_invoice,account.group_account_readonly">
+                    <group string="Fiscal Information" name="fiscal_information" priority="5" groups="account.group_account_invoice,account.group_account_readonly" invisible="1">
                         <field name="property_account_position_id" options="{'no_create': True, 'no_open': True}"/>
                     </group>
                 </xpath>

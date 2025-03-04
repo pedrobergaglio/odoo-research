@@ -81,7 +81,7 @@ class Company(models.Model):
     uninstalled_l10n_module_ids = fields.Many2many('ir.module.module', compute='_compute_uninstalled_l10n_module_ids')
     _sql_constraints = [
         ('name_uniq', 'unique (name)', 'The company name must be unique!')
-    ]
+    ]   
 
     def init(self):
         for company in self.search([('paperformat_id', '=', False)]):

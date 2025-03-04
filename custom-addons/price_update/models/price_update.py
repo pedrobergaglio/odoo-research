@@ -3,39 +3,79 @@ from odoo.exceptions import UserError
 
 class PriceUpdateWizard(models.TransientModel):
     _name = 'price.update.wizard'
-    _description = 'Asistente para actualizar precios por categoría'
+    _description = 'Asistente para actualizar precios por categorías'
 
-    category_id = fields.Many2one('product.category', string='Categoría de Producto', required=True)
-    percentage = fields.Float(string='Porcentaje (%)', required=True, help='Porcentaje de cambio en el precio. Positivo para incremento, negativo para descuento.')
+    category_ids = fields.Many2many(
+        'product.category', 
+        string='Categorías de Producto', 
+        required=True, 
+        help="Selecciona las categorías de productos a actualizar"
+    )
+    percentage = fields.Float(
+        string='Porcentaje (%)', 
+        required=True, 
+        help='Porcentaje de cambio en el precio. Positivo para incremento, negativo para descuento.'
+    )
     
     def action_update_prices(self):
         if self.percentage == 0:
             raise UserError('El porcentaje no puede ser 0.')
+        
+        if not self.category_ids:
+            raise UserError('Debe seleccionar al menos una categoría.')
+        
+        # Preparar estadísticas
+        total_updated_products = 0
+        update_details = []
+        
+        # Iterar sobre cada categoría seleccionada
+        for category in self.category_ids:
+            # Buscar todos los productos en esta categoría (incluyendo subcategorías)
+            products = self.env['product.product'].search([
+                ('categ_id', 'child_of', category.id)
+            ])
             
-        # Buscar todos los productos con la categoría seleccionada
-        products = self.env['product.product'].search([('categ_id', '=', self.category_id.id)])
-        
-        if not products:
-            raise UserError(f'No se encontraron productos en la categoría {self.category_id.name}')
+            # Contador para esta categoría
+            category_updated_count = 0
             
-        # Contador para el mensaje de confirmación
-        updated_count = 0
+            # Actualizar precio de cada producto
+            for product in products:
+                if product.lst_price:  # Verificar que el producto tenga un precio
+                    # Calcular nuevo precio
+                    new_price = product.lst_price * (1 + (self.percentage / 100))
+                    
+                    # Actualizar precio
+                    product.write({'lst_price': new_price})
+                    category_updated_count += 1
+            
+            # Añadir detalles de esta categoría
+            update_details.append({
+                'category_name': category.name,
+                'updated_products': category_updated_count
+            })
+            
+            total_updated_products += category_updated_count
         
-        # Actualizar el precio de cada producto
-        for product in products:
-            if product.lst_price:  # Verificar que el producto tenga un precio
-                # Calcular el nuevo precio aplicando el porcentaje
-                new_price = product.lst_price * (1 + (self.percentage / 100))
-                product.write({'lst_price': new_price})
-                updated_count += 1
+        # Preparar mensaje de notificación detallado
+        message_lines = [
+            "Resumen de Actualización de Precios:",
+            f"Porcentaje aplicado: {self.percentage}%",
+            f"Total de productos actualizados: {total_updated_products}"
+        ]
         
-        # Mostrar mensaje de confirmación
+        # Añadir detalles por categoría
+        for detail in update_details:
+            message_lines.append(
+                f"- Categoría {detail['category_name']}: {detail['updated_products']} productos actualizados"
+            )
+        
+        # Mostrar notificación detallada
         return {
             'type': 'ir.actions.client',
             'tag': 'display_notification',
             'params': {
-                'title': 'Actualización Completada',
-                'message': f'Se actualizaron los precios de {updated_count} productos en la categoría {self.category_id.name} con un {self.percentage}%.',
+                'title': 'Actualización de Precios Completada',
+                'message': '\n'.join(message_lines),
                 'sticky': False,
                 'type': 'success',
                 'next': {'type': 'ir.actions.act_window_close'},
