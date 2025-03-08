@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data noupdate="1">
+        <record id="categoria_pedido" model="presupuesto.categoria">
+            <field name="name">Pedido</field>
+            <field name="code">pedido</field>
+        </record>
+        
+        <record id="categoria_servicio" model="presupuesto.categoria">
+            <field name="name">Servicio Técnico</field>
+            <field name="code">servicio</field>
+        </record>
+    </data>
+</odoo>

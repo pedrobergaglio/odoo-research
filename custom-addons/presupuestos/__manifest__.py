@@ -1,22 +1,23 @@
 {
     'name': 'Presupuestos',
     'version': '1.0',
-    'category': 'Sales',
-    'summary': 'Gestión centralizada de Presupuestos',
+    'summary': 'Gestión de Presupuestos',
     'description': """
-        Este módulo crea una nueva aplicación para gestionar presupuestos de forma centralizada.
-        Permite categorizar los presupuestos como Pedidos o Servicios Técnicos.
+        Módulo para gestionar presupuestos que pueden convertirse en pedidos o servicios técnicos.
     """,
-    'author': 'Tu Nombre',
-    'depends': ['sale_management', 'pedidos', 'servicio_tecnico'],
+    'category': 'Sales',
+    'author': 'Tu Empresa',
+    'website': 'https://www.tuempresa.com',
+    'depends': ['base', 'mail', 'product', 'account'],
     'data': [
-        'security/presupuestos_security.xml',
+        'security/presupuesto_security.xml',
         'security/ir.model.access.csv',
-        'views/presupuestos_views.xml',
-        'views/menu_views.xml',
+        'data/presupuesto_sequence.xml',
+        'data/presupuesto_data.xml',
+        'views/presupuesto_views.xml',
     ],
-    'application': True,
+    'demo': [],
     'installable': True,
+    'application': True,
     'auto_install': False,
-    'sequence': 1,
 }

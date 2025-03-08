@@ -1,1 +1,1 @@
-from . import pedidos
+from . import pedido

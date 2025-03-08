@@ -219,6 +219,7 @@ class Partner(models.Model):
                 values['type'] = None
         return values
 
+    partner_type = fields.Char(string="Partner Type")
     name = fields.Char(index=True, default_export_compatible=True)
     complete_name = fields.Char(compute='_compute_complete_name', store=True, index=True)
     title: PartnerTitle = fields.Many2one('res.partner.title')

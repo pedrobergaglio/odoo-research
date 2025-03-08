@@ -1,0 +1,112 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <!-- Vista de formulario para Pedido -->
+    <record id="view_pedido_form" model="ir.ui.view">
+        <field name="name">pedido.pedido.form</field>
+        <field name="model">pedido.pedido</field>
+        <field name="arch" type="xml">
+            <form>
+                <header>
+                    <button name="action_preparar" string="Preparar" type="object" class="oe_highlight" invisible="state != 'confirmado'"/>
+                    <button name="action_listo" string="Listo para Entrega" type="object" class="oe_highlight" invisible="state != 'en_preparacion'"/>
+                    <button name="action_entregar" string="Entregar" type="object" class="oe_highlight" invisible="state != 'listo_para_entrega'"/>
+                    <button name="action_cancelar" string="Cancelar" type="object" invisible="state not in ('confirmado', 'en_preparacion', 'listo_para_entrega')"/>
+                    <field name="state" widget="statusbar" statusbar_visible="confirmado,en_preparacion,listo_para_entrega,entregado,cancelado"/>
+                </header>
+                <sheet>
+                    <div class="oe_title">
+                        <h1>
+                            <field name="name" readonly="1"/>
+                        </h1>
+                    </div>
+                    <group>
+                        <group>
+                            <field name="presupuesto_id" readonly="1"/>
+                            <field name="partner_id" readonly="1"/>
+                            <field name="date" readonly="1"/>
+                            <field name="date_pedido" readonly="state == 'confirmado'"/>
+                        </group>
+                        <group>
+                            <field name="payment_method_id" readonly="1"/>
+                            <field name="fecha_entrega_estimada" readonly="state not in ('confirmado', 'en_preparacion')"/>
+                            <field name="direccion_entrega" readonly="state not in ('confirmado', 'en_preparacion')"/>
+                            <field name="user_id" readonly="1"/>
+                            <field name="company_id" groups="base.group_multi_company" readonly="1"/>
+                        </group>
+                    </group>
+                    <notebook>
+                        <page string="Líneas de Pedido">
+                            <field name="line_ids">
+                                <list editable="bottom">
+                                    <field name="product_id" readonly="1"/>
+                                    <field name="name" readonly="1"/>
+                                    <field name="quantity" readonly="1"/>
+                                    <field name="price_unit" readonly="1"/>
+                                    <field name="tax_id" widget="many2many_tags" readonly="1"/>
+                                    <field name="price_subtotal" sum="Total Subtotals"/>
+                                </list>
+                            </field>
+                        </page>
+                        <page string="Totales">
+                            <group>
+                                <field name="amount_untaxed" widget="monetary"/>
+                                <field name="amount_tax" widget="monetary"/>
+                                <field name="amount_total" widget="monetary"/>
+                            </group>
+                        </page>
+                    </notebook>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <!-- Vista de lista para mostrar Presupuestos -->
+    <record id="view_pedido_tree" model="ir.ui.view">
+        <field name="name">pedido.pedido.tree</field>
+        <field name="model">pedido.pedido</field>
+        <field name="arch" type="xml">
+            <list>
+                <field name="name"/>
+                <field name="presupuesto_id"/>
+                <field name="partner_id"/>
+                <field name="date"/>
+                <field name="amount_total" sum="Total"/>
+                <field name="state"/>
+            </list>
+        </field> 
+    </record>
+
+    <!-- Vista de búsqueda para filtrar Presupuestos -->
+    <record id="view_pedido_search" model="ir.ui.view">
+        <field name="name">pedido.presupuesto.search</field>
+        <field name="model">presupuesto.presupuesto</field>
+        <field name="arch" type="xml">
+            <search>
+                <field name="name"/>
+                <field name="partner_id"/>1
+                <filter string="Presupuestos Pendientes" name="pending" domain="[('state', '=', 'presupuesto_pedido')]"/>
+                <group expand="0" string="Agrupar Por">
+                    <filter string="Cliente" name="partner" context="{'group_by': 'partner_id'}"/>
+                    <filter string="Fecha" name="date" context="{'group_by': 'date'}"/>
+                </group>
+            </search>
+        </field>
+    </record>
+
+    <!-- Acción de ventana para mostrar Presupuestos en Pedidos -->
+    <record id="action_pedido" model="ir.actions.act_window">
+        <field name="name">Pedidos</field>
+        <field name="res_model">pedido.pedido</field>
+        <field name="view_mode">list,form</field>
+        <field name="domain">[('state', '=', 'presupuesto_pedido')]</field>
+        <field name="context">{'search_default_pending': 1}</field>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_smiling_face">
+                Aquí puedes ver los presupuestos en estado 'Presupuesto Pedido' y crear pedidos a partir de ellos.
+            </p>
+        </field>
+    </record>
+
+    <!-- Menú Principal -->
+    <menuitem id="menu_pedido_root" name="Pedidos" sequence="10" action="action_pedido" />
+</odoo>

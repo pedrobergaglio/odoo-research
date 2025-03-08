@@ -1,22 +1,19 @@
 {
     'name': 'Pedidos',
     'version': '1.0',
-    'category': 'Sales',
-    'summary': 'Gestión exclusiva de Pedidos',
+    'summary': 'Módulo para gestionar pedidos basados en presupuestos',
     'description': """
-        Este módulo crea una nueva aplicación para gestionar exclusivamente pedidos.
-        Extiende las órdenes de venta añadiendo un campo para clasificarlas como Pedido.
+        Este módulo permite crear y gestionar pedidos relacionados con presupuestos.
     """,
+    'category': 'Sales',
     'author': 'Tu Nombre',
-    'depends': ['sale_management'],
+    'depends': ['base', 'mail', 'presupuestos', 'product', 'account'],  # Asegúrate de incluir 'presupuesto' si depende de tu módulo anterior
     'data': [
-        'security/pedidos_security.xml',
         'security/ir.model.access.csv',
-        'views/pedidos_views.xml',
-        'views/menu_views.xml',
+        'views/pedido_views.xml',
+        'data/ir_sequence_data.xml',
+  # Si usas secuencia personalizada
     ],
-    'application': True,
     'installable': True,
-    'auto_install': False,
-    'sequence': 1,
+    'application': True,
 }

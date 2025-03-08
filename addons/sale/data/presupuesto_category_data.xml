@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data noupdate="1">
+        <record id="presupuesto_category_pedido" model="presupuesto.category">
+            <field name="name">Categoría Pedidos</field>
+            <field name="code">CAT-PEDIDOS</field>
+            <field name="type">pedido</field>
+            <field name="active">True</field>
+        </record>
+        
+        <record id="presupuesto_category_servicio" model="presupuesto.category">
+            <field name="name">Categoría Servicios Técnicos</field>
+            <field name="code">CAT-SERV-TEC</field>
+            <field name="type">servicio</field>
+            <field name="active">True</field>
+        </record>
+    </data>
+</odoo>

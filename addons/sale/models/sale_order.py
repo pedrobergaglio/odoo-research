@@ -67,6 +67,7 @@ class SaleOrder(models.Model):
 
     #=== FIELDS ===#
 
+    customer_signature = fields.Binary(string='Customer Signature')
     name = fields.Char(
         string="Order Reference",
         required=True, copy=False, readonly=False,

@@ -1,1 +1,0 @@
-from . import servicio_tecnico

@@ -1,3 +1,4 @@
 id,name,model_id:id,group_id:id,perm_read,perm_write,perm_create,perm_unlink
-access_presupuesto_category_user,presupuesto.category.user,model_presupuesto_category,group_presupuestos_user,1,0,0,0
-access_presupuesto_category_manager,presupuesto.category.manager,model_presupuesto_category,group_presupuestos_manager,1,1,1,1
+access_presupuesto_presupuesto,presupuesto.presupuesto.access,model_presupuesto_presupuesto,base.group_user,1,1,1,1
+access_presupuesto_categoria,presupuesto.categoria.access,model_presupuesto_categoria,base.group_user,1,1,1,1
+access_presupuesto_line,presupuesto.line.access,model_presupuesto_line,base.group_user,1,1,1,1
