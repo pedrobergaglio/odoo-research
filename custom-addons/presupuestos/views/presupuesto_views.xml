@@ -151,7 +151,6 @@
         </field>
     </record>
 
-    <!-- Menú Principal -->
     <menuitem id="menu_presupuesto_root" name="Presupuestos" sequence="10" action="action_presupuesto" />
     
 

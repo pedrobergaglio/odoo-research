@@ -107,6 +107,5 @@
         </field>
     </record>
 
-    <!-- Menú Principal -->
     <menuitem id="menu_pedido_root" name="Pedidos" sequence="10" action="action_pedido" />
 </odoo>

@@ -1,5 +1,3 @@
-# -*- coding: utf-8 -*-
-
 from odoo import models, fields, api
 from odoo.exceptions import ValidationError
 
@@ -13,13 +11,12 @@ class Pedido(models.Model):
     
     presupuesto_id = fields.Many2one('presupuesto.presupuesto', string='Presupuesto', required=True)
     
-    # Campos heredados del presupuesto
+    # Campos del parent presupuesto
     partner_id = fields.Many2one(related='presupuesto_id.partner_id', string='Cliente', store=True, readonly=True)
     date = fields.Date(related='presupuesto_id.date', string='Fecha de Presupuesto', store=True, readonly=True)
     date_pedido = fields.Date('Fecha de Pedido', default=fields.Date.today, required=True)
     payment_method_id = fields.Many2one(related='presupuesto_id.payment_method_id', string='Método de Pago', store=True)
     
-    # Estados específicos para pedidos
     state = fields.Selection([
         ('confirmado', 'Confirmado'),
         ('en_preparacion', 'En Preparación'),
@@ -31,16 +28,13 @@ class Pedido(models.Model):
     # Líneas de pedido (heredadas del presupuesto)
     line_ids = fields.One2many('pedido.line', 'pedido_id', string='Líneas de Pedido')
     
-    # Campos de totales
     amount_untaxed = fields.Float(string='Base Imponible', compute='_compute_amount', store=True, readonly=True)
     amount_tax = fields.Float(string='IVA', compute='_compute_amount', store=True, readonly=True)
     amount_total = fields.Float(string='Total', compute='_compute_amount', store=True, readonly=True)
     
-    # Campos adicionales específicos para pedidos
     fecha_entrega_estimada = fields.Date('Fecha de Entrega Estimada')
     direccion_entrega = fields.Text('Dirección de Entrega')
     
-    # Campos para seguimiento
     user_id = fields.Many2one('res.users', string='Responsable', default=lambda self: self.env.user)
     company_id = fields.Many2one('res.company', string='Compañía', default=lambda self: self.env.company)
     currency_id = fields.Many2one('res.currency', string='Moneda', related='company_id.currency_id')
@@ -57,10 +51,8 @@ class Pedido(models.Model):
     @api.model
     def create(self, vals):
         pedido = super(Pedido, self).create(vals)
-        # Actualizar estado del presupuesto relacionado
         if pedido.presupuesto_id.state == 'presupuesto_pedido':
             pedido.presupuesto_id.write({'state': 'en_proceso'})
-        # Crear líneas de pedido basadas en las líneas de presupuesto
         for presupuesto_line in pedido.presupuesto_id.line_ids:
             self.env['pedido.line'].create({
                 'pedido_id': pedido.id,

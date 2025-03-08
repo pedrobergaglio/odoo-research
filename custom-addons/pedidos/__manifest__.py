@@ -12,7 +12,6 @@
         'security/ir.model.access.csv',
         'views/pedido_views.xml',
         'data/ir_sequence_data.xml',
-  # Si usas secuencia personalizada
     ],
     'installable': True,
     'application': True,

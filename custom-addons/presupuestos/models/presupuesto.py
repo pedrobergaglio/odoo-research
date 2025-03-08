@@ -1,6 +1,3 @@
-from . import presupuesto
-
-# Archivo: models/presupuesto.py
 from odoo import models, fields, api
 from odoo.exceptions import ValidationError
 import logging
@@ -22,20 +19,16 @@ class Presupuesto(models.Model):
     name = fields.Char('Número de Presupuesto', required=True, copy=False, readonly=True, 
                       default=lambda self: self.env['ir.sequence'].next_by_code('presupuesto.presupuesto'))
     
-    # Campos principales
     partner_id = fields.Many2one('res.partner', string='Cliente', required=True, tracking=True)
     address = fields.Char(related='partner_id.contact_address', string='Dirección', readonly=True)
     date = fields.Date('Fecha', default=fields.Date.today, required=True, tracking=True)
     
-    # Método de pago
     payment_method_id = fields.Many2one('account.payment.method', string='Método de Pago')
     
-    # Categoría (crucial para el flujo de trabajo)
     categoria_id = fields.Many2one('presupuesto.categoria', string='Categoría', required=True, tracking=True,
                                    domain="[('code', 'in', ['pedido', 'servicio'])]")
     categoria_code = fields.Char(related='categoria_id.code', string='Código de Categoría', store=True)
     
-    # Estados
     state = fields.Selection([
         ('draft', 'Borrador'),
         ('presupuestado', 'Presupuestado'),
@@ -49,12 +42,10 @@ class Presupuesto(models.Model):
     # Líneas de productos
     line_ids = fields.One2many('presupuesto.line', 'presupuesto_id', string='Líneas de Presupuesto')
 
-    # Campos de totales
     amount_untaxed = fields.Float('Base Imponible', compute='_compute_amounts', store=True)
     amount_tax = fields.Float('IVA', compute='_compute_amounts', store=True)
     amount_total = fields.Float('Total', compute='_compute_amounts', store=True)
     
-    # Campos para seguimiento
     user_id = fields.Many2one('res.users', string='Responsable', default=lambda self: self.env.user)
     company_id = fields.Many2one('res.company', string='Compañía', default=lambda self: self.env.company)
     currency_id = fields.Many2one('res.currency', string='Moneda', related='company_id.currency_id')
