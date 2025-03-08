@@ -7,7 +7,6 @@
 # Uuganbayar Batbaatar <uuganaaub33@gmail.com>, 2024
 # Munkhbilguun Altankhuyag <munkhbilguunaltankhuyag@gmail.com>, 2024
 # Ariunbold Namnandorj <ariunbold.org@gmail.com>, 2024
-# Bayarkhuu Bataa, 2024
 # Munkhbaatar g <muuguu17@gmail.com>, 2024
 # hish, 2024
 # Minj P <pminj322@gmail.com>, 2024
@@ -24,6 +23,7 @@
 # Nurbahyt Kh <nurbahyt.kh@gmail.com>, 2024
 # Martin Trigaux, 2024
 # Torbat Jargalsaikhan, 2024
+# Bayarkhuu Bataa, 2025
 # Baskhuu Lodoikhuu <baskhuujacara@gmail.com>, 2025
 # 
 msgid ""
@@ -1852,6 +1852,12 @@ msgid "Discount on lines"
 msgstr "Мөр дээрх хөнгөлөлт"
 
 #. module: sale
+#. odoo-python
+#: code:addons/sale/wizard/sale_order_discount.py:0
+msgid "Discount- On products with the following taxes %(taxes)s"
+msgstr ""
+
+#. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.view_order_form
 msgid "Discount:"
 msgstr "Хөнгөлөлт:"
@@ -1932,7 +1938,7 @@ msgstr "Урьдчилгаа төлбөрийн дүн (тогтмол)"
 #. odoo-python
 #: code:addons/sale/models/sale_order_line.py:0
 msgid "Down Payment: %(date)s (Draft)"
-msgstr ""
+msgstr "Урьдчилгаа төлбөр: %(date)s (Ноорог)"
 
 #. module: sale
 #. odoo-python
@@ -2729,7 +2735,7 @@ msgstr "Гараар"
 #. module: sale
 #: model:ir.model.fields.selection,name:sale.selection__res_company__sale_onboarding_payment_method__manual
 msgid "Manual Payment"
-msgstr ""
+msgstr "Гар аргаар төлбөр бүртгэх"
 
 #. module: sale
 #: model:ir.model.fields.selection,name:sale.selection__product_template__service_type__manual
@@ -3024,7 +3030,7 @@ msgstr "Онлайн төлбөр"
 #. module: sale
 #: model:ir.ui.menu,name:sale.payment_menu
 msgid "Online Payments"
-msgstr ""
+msgstr "Онлайн төлбөр"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_res_company__portal_confirmation_sign
@@ -3346,7 +3352,7 @@ msgstr ""
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.sale_order_portal_content
 msgid "Payment terms"
-msgstr ""
+msgstr "Төлбөрийн нөхцөл"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order_discount__discount_percentage

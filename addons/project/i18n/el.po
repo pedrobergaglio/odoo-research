@@ -9,10 +9,10 @@
 # George Tarasidis <george_tarasidis@yahoo.com>, 2024
 # Martin Trigaux, 2024
 # Kostas Goutoudis <goutoudis@gmail.com>, 2024
-# Maria Chalepiadou, 2025
-# Gerasimos Kanelatos, 2025
 # Charalampos Loukas, 2025
 # Agapi Psyllou, 2025
+# Gerasimos Kanelatos, 2025
+# Maria Chalepiadou, 2025
 # Anastasia Mimou, 2025
 # 
 msgid ""
@@ -589,7 +589,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:project.field_project_share_wizard__access_warning
 #: model:ir.model.fields,field_description:project.field_project_task__access_warning
 msgid "Access warning"
-msgstr ""
+msgstr "Προειδοποίηση πρόσβασης"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_milestone__message_needaction
@@ -881,7 +881,7 @@ msgstr ""
 #: code:addons/project/static/src/components/project_right_side_panel/components/project_milestone.js:0
 #: code:addons/project/static/src/components/subtask_one2many_field/subtask_list_renderer.js:0
 msgid "Are you sure you want to delete this record?"
-msgstr ""
+msgstr "Είστε σίγουρος/η ότι θέλετε να διαγράψετε αυτή την εγγραφή;"
 
 #. module: project
 #. odoo-javascript
@@ -3041,7 +3041,7 @@ msgstr ""
 #: model:ir.model.fields.selection,name:project.selection__project_update__status__on_hold
 #: model_terms:ir.ui.view,arch_db:project.project_update_view_search
 msgid "On Hold"
-msgstr ""
+msgstr "Σε Αναμονή"
 
 #. module: project
 #: model:ir.model.fields.selection,name:project.selection__project_project__last_update_status__on_track
@@ -3340,7 +3340,7 @@ msgstr ""
 #: code:addons/project/static/src/components/project_right_side_panel/project_right_side_panel.js:0
 #: code:addons/project/static/src/components/project_right_side_panel/project_right_side_panel.xml:0
 msgid "Profitability"
-msgstr ""
+msgstr "Κερδοφορία"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_update__progress
@@ -3846,7 +3846,7 @@ msgstr ""
 #. odoo-javascript
 #: code:addons/project/static/src/components/project_right_side_panel/components/project_profitability.xml:0
 msgid "Revenues"
-msgstr ""
+msgstr "Έσοδα"
 
 #. module: project
 #. odoo-javascript
@@ -4483,7 +4483,7 @@ msgstr "Εργασίες"
 #: model_terms:ir.ui.view,arch_db:project.view_task_project_user_pivot
 #: model_terms:ir.ui.view,arch_db:project.view_task_project_user_search
 msgid "Tasks Analysis"
-msgstr ""
+msgstr "Ανάλυση Εργασιών"
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.edit_project

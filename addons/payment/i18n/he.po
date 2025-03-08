@@ -17,10 +17,10 @@
 # Moshe Flam <pashute@gmail.com>, 2024
 # ilan kl <ilan@qaroads.co.il>, 2024
 # NoaFarkash, 2024
-# ZVI BLONDER <ZVIBLONDER@gmail.com>, 2024
 # Ha Ketem <haketem@gmail.com>, 2024
 # yael terner, 2024
 # Lilach Gilliam <lilach.gilliam@gmail.com>, 2025
+# ZVI BLONDER <ZVIBLONDER@gmail.com>, 2025
 # or balmas, 2025
 # 
 msgid ""
@@ -60,6 +60,8 @@ msgid ""
 "Number: %(account_number)s</li><li>Account Holder: "
 "%(account_holder)s</li></ul>"
 msgstr ""
+"<h3>אנא בצע תשלום ל: </h3><ul><li>בנק: %(bank)s</li><li>מספר החשבון: "
+"%(account_number)s</li><li>בעל החשבון: %(account_holder)s</li></ul>"
 
 #. module: payment
 #: model_terms:ir.ui.view,arch_db:payment.payment_method_form
@@ -1115,7 +1117,7 @@ msgstr ""
 #: model:ir.model.fields.selection,name:payment.selection__payment_provider__support_manual_capture__full_only
 #: model:ir.model.fields.selection,name:payment.selection__payment_provider__support_refund__full_only
 msgid "Full Only"
-msgstr ""
+msgstr "רק במלואו"
 
 #. module: payment
 #: model:payment.method,name:payment.payment_method_gcash
@@ -2852,7 +2854,7 @@ msgstr "לא פורסם"
 #: model:ir.model.fields.selection,name:payment.selection__payment_method__support_refund__none
 #: model:ir.model.fields.selection,name:payment.selection__payment_provider__support_refund__none
 msgid "Unsupported"
-msgstr ""
+msgstr "לא נתמך"
 
 #. module: payment
 #: model_terms:ir.ui.view,arch_db:payment.payment_provider_form

@@ -902,19 +902,7 @@ class MrpProduction(models.Model):
                 if production.state == 'draft' and picking_type != production.picking_type_id:
                     production.name = picking_type.sequence_id.next_by_id()
 
-        date_start_map = dict()
-        if 'date_start' in vals:
-            date_start = fields.Datetime.to_datetime(vals['date_start'])
-            date_start_map = {
-                prod: date_start - datetime.timedelta(days=prod.bom_id.produce_delay)
-                if prod.bom_id else date_start
-                for prod in self
-            }
-            res = True
-            for production in self:
-                res &= super(MrpProduction, production).write({**vals, 'date_start': date_start_map[production]})
-        else:
-            res = super().write(vals)
+        res = super().write(vals)
 
         for production in self:
             if 'date_start' in vals and not self.env.context.get('force_date', False):
@@ -1359,7 +1347,7 @@ class MrpProduction(models.Model):
     def set_qty_producing(self):
         # This method is used to call `_set_lot_producing` when the onchange doesn't apply.
         self.ensure_one()
-        self._set_qty_producing()
+        self._set_qty_producing(False)
 
     def _set_lot_producing(self):
         self.ensure_one()
@@ -1436,7 +1424,7 @@ class MrpProduction(models.Model):
         self.ensure_one()
         self._set_lot_producing()
         if self.product_id.tracking == 'serial':
-            self._set_qty_producing()
+            self._set_qty_producing(False)
         if self.picking_type_id.auto_print_generated_mrp_lot:
             return self._autoprint_generated_lot(self.lot_producing_id)
 
@@ -1864,6 +1852,8 @@ class MrpProduction(models.Model):
         new_moves_vals = []
         moves = []
         move_to_backorder_moves = {}
+        # unlink all unregistered move lines linked a move containing an effictive registration
+        (self.move_raw_ids | self.move_finished_ids).filtered(lambda m: m.picked and not m.additional).move_line_ids.filtered(lambda ml: not ml.picked).unlink()
         for production in self:
             for move in production.move_raw_ids | production.move_finished_ids:
                 if move.additional:

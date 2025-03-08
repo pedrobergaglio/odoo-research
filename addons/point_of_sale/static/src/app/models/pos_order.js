@@ -19,6 +19,10 @@ export class PosOrder extends Base {
 
         if (!this.session_id && (!this.finalized || typeof this.id !== "number")) {
             this.update({ session_id: this.session });
+
+            if (this.state === "draft" && this.lines.length == 0 && this.payment_ids.length == 0) {
+                this._isResidual = true;
+            }
         }
 
         // Data present in python model
@@ -43,6 +47,10 @@ export class PosOrder extends Base {
 
         if (!vals.lines) {
             this.lines = [];
+        }
+
+        if (!this.user_id && this.models["res.users"]) {
+            this.user_id = this.user;
         }
 
         // !!Keep all uiState in one object!!
@@ -319,6 +327,8 @@ export class PosOrder extends Base {
                 if (this.last_order_preparation_change.lines[line.preparationKey]) {
                     this.last_order_preparation_change.lines[line.preparationKey]["quantity"] =
                         line.get_quantity();
+                    this.last_order_preparation_change.lines[line.preparationKey]["note"] =
+                        line.getNote();
                 } else {
                     this.last_order_preparation_change.lines[line.preparationKey] = {
                         attribute_value_ids: line.attribute_value_ids.map((a) => ({

@@ -166,7 +166,7 @@ class TestExpenses(TestExpenseCommon):
             {'balance':   208.70, 'account_id': tax_account_id,             'name': '15%',                                'date': date(2021, 10, 31),           'invoice_date': date(2021, 10, 10)},
             {'balance':    18.46, 'account_id': tax_account_id,             'name': '15%',                                'date': date(2021, 10, 31),           'invoice_date': date(2021, 10, 10)},
             {'balance':    18.46, 'account_id': tax_account_id,             'name': '15% (Copy)',                         'date': date(2021, 10, 31),           'invoice_date': date(2021, 10, 10)},
-            {'balance': -1760.00, 'account_id': default_account_payable_id, 'name': '',                                   'date': date(2021, 10, 31),           'invoice_date': date(2021, 10, 10)},
+            {'balance': -1760.00, 'account_id': default_account_payable_id, 'name': False,                                   'date': date(2021, 10, 31),           'invoice_date': date(2021, 10, 10)},
 
             # company_account expense 2 move
             {'balance':  123.08, 'account_id': product_b_account_id,        'name': 'expense_employee: PB 160 + 2*15% 2', 'date': date(2021, 10, 12),           'invoice_date': False},
@@ -1805,3 +1805,28 @@ class TestExpenses(TestExpenseCommon):
         expense.quantity = 0
         self.assertTrue(expense.currency_id.is_zero(expense.total_amount_currency))
         self.assertEqual(expense.company_currency_id.compare_amounts(expense.price_unit, self.product_b.standard_price), 0)
+
+    def test_mileage_with_quantity(self):
+        product = self.env['hr.expense'].env.ref('hr_expense.expense_product_mileage')
+        product.standard_price = 1.0
+
+        expense_sheet = self.create_expense_report({
+            'name': 'Expense for John Smith',
+            'expense_line_ids': [Command.create({
+                'name': 'Mileage product',
+                'employee_id': self.expense_employee.id,
+                'product_id': product.id,
+                'quantity': 5,
+                'payment_mode': 'company_account',
+                'company_id': self.company_data['company'].id,
+            })],
+        })
+
+        expense_sheet.action_submit_sheet()
+        expense_sheet.action_approve_expense_sheets()
+        expense_sheet.action_sheet_move_post()
+        self.assertRecordValues(expense_sheet.account_move_ids.line_ids, [
+            {'balance': 4.35, 'name': 'expense_employee: Mileage product', 'quantity': 5},
+            {'balance': 0.65, 'name': '15%',                               'quantity': 1},
+            {'balance': -5.0, 'name': 'expense_employee: Mileage product', 'quantity': 1},
+        ])

@@ -206,18 +206,16 @@ export class ProductProduct extends Base {
     }
 
     get searchString() {
-        const fields = ["display_name"];
+        const fields = ["display_name", "barcode", "default_code"];
         return fields
             .map((field) => this[field] || "")
             .filter(Boolean)
             .join(" ");
     }
 
-    exactMatch(searchWord) {
-        const fields = ["barcode", "default_code"];
-        return fields.some(
-            (field) => this[field] && this[field].toLowerCase().includes(searchWord)
-        );
+    exactMatch() {
+        // this method is kept for backward compatibility
+        return [];
     }
 
     _isArchivedCombination(attributeValueIds) {

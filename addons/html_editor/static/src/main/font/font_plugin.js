@@ -20,6 +20,7 @@ import { FontSelector } from "./font_selector";
 import { getBaseContainerSelector } from "@html_editor/utils/base_container";
 import { withSequence } from "@html_editor/utils/resource";
 import { reactive } from "@odoo/owl";
+import { FontSizeSelector } from "./font_size_selector";
 
 export const fontItems = [
     {
@@ -179,7 +180,7 @@ export class FontPlugin extends Plugin {
                             tagName: item.tagName,
                             extraClass: item.extraClass,
                         });
-                        this.updateFontParams();
+                        this.updateFontSelectorParams();
                     },
                 },
             },
@@ -187,16 +188,23 @@ export class FontPlugin extends Plugin {
                 id: "font-size",
                 groupId: "font-size",
                 title: _t("Font size"),
-                Component: FontSelector,
+                Component: FontSizeSelector,
                 props: {
                     getItems: () => this.fontSizeItems,
                     getDisplay: () => this.fontSize,
+                    onFontSizeInput: (size) => {
+                        this.dependencies.format.formatSelection("fontSize", {
+                            formatProps: { size },
+                            applyStyle: true,
+                        });
+                        this.updateFontSizeSelectorParams();
+                    },
                     onSelected: (item) => {
                         this.dependencies.format.formatSelection("setFontSizeClassName", {
                             formatProps: { className: item.className },
                             applyStyle: true,
                         });
-                        this.updateFontParams();
+                        this.updateFontSizeSelectorParams();
                     },
                 },
             },
@@ -241,9 +249,18 @@ export class FontPlugin extends Plugin {
 
         /** Handlers */
         input_handlers: this.onInput.bind(this),
-        selectionchange_handlers: this.updateFontParams.bind(this),
-        post_undo_handlers: this.updateFontParams.bind(this),
-        post_redo_handlers: this.updateFontParams.bind(this),
+        selectionchange_handlers: [
+            this.updateFontSelectorParams.bind(this),
+            this.updateFontSizeSelectorParams.bind(this),
+        ],
+        post_undo_handlers: [
+            this.updateFontSelectorParams.bind(this),
+            this.updateFontSizeSelectorParams.bind(this),
+        ],
+        post_redo_handlers: [
+            this.updateFontSelectorParams.bind(this),
+            this.updateFontSizeSelectorParams.bind(this),
+        ],
 
         /** Overrides */
         split_element_block_overrides: [
@@ -340,6 +357,10 @@ export class FontPlugin extends Plugin {
                 closestBlockNode.remove();
             }
             const baseContainer = this.dependencies.baseContainer.createBaseContainer();
+            const dir = closestBlockNode.getAttribute("dir") || closestPre.getAttribute("dir");
+            if (dir) {
+                baseContainer.setAttribute("dir", dir);
+            }
             closestPre.after(baseContainer);
             fillEmpty(baseContainer);
             this.dependencies.selection.setCursorStart(baseContainer);
@@ -377,6 +398,10 @@ export class FontPlugin extends Plugin {
                 closestBlockNode.remove();
             }
             const baseContainer = this.dependencies.baseContainer.createBaseContainer();
+            const dir = closestBlockNode.getAttribute("dir") || closestQuote.getAttribute("dir");
+            if (dir) {
+                baseContainer.setAttribute("dir", dir);
+            }
             closestQuote.after(baseContainer);
             fillEmpty(baseContainer);
             this.dependencies.selection.setCursorStart(baseContainer);
@@ -405,6 +430,10 @@ export class FontPlugin extends Plugin {
                 !descendants(newElement).some(isVisibleTextNode)
             ) {
                 const baseContainer = this.dependencies.baseContainer.createBaseContainer();
+                const dir = newElement.getAttribute("dir");
+                if (dir) {
+                    baseContainer.setAttribute("dir", dir);
+                }
                 newElement.replaceWith(baseContainer);
                 baseContainer.replaceChildren(this.document.createElement("br"));
                 this.dependencies.selection.setCursorStart(baseContainer);
@@ -473,8 +502,12 @@ export class FontPlugin extends Plugin {
             this.dependencies.dom.setTag({ tagName: headingToBe });
         }
     }
-    updateFontParams() {
+
+    updateFontSelectorParams() {
         this.font.displayName = this.fontName;
+    }
+
+    updateFontSizeSelectorParams() {
         this.fontSize.displayName = this.fontSizeName;
     }
 }

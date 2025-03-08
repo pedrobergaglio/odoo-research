@@ -69,7 +69,7 @@ export const PROTECTED_BLOCK_TAG = ['TR','TD','TABLE','TBODY','UL','OL','LI'];
  * override of the font-size.
  */
 export const FONT_SIZE_CLASSES = ["display-1-fs", "display-2-fs", "display-3-fs", "display-4-fs", "h1-fs",
-    "h2-fs", "h3-fs", "h4-fs", "h5-fs", "h6-fs", "base-fs", "o_small-fs", "small"];
+    "h2-fs", "h3-fs", "h4-fs", "h5-fs", "h6-fs", "base-fs", "o_small-fs", "small", "o_small_twelve-fs", "o_small_ten-fs", "o_small_eight-fs"];
 
 /**
  * Array of all the classes used by the editor to change the text style.
@@ -1014,7 +1014,7 @@ export function getAdjacentCharacter(editable, side) {
     return closestBlock(focusNode) === originalBlock ? adjacentCharacter : undefined;
 }
 
-function isZwnbsp(node) {
+export function isZwnbsp(node) {
     return node.nodeType === Node.TEXT_NODE && node.textContent === '\ufeff';
 }
 
@@ -1325,8 +1325,11 @@ export const formatSelection = (editor, formatName, {applyStyle, formatProps} = 
 
             parentNode = currentNode.parentElement;
         }
-
-        const firstBlockOrClassHasFormat = formatSpec.isFormatted(parentNode, formatProps);
+        const isFormatted =
+            formatName === "setFontSizeClassName" && !formatProps
+                ? hasAnyFontSizeClass
+                : formatSpec.isFormatted;
+        const firstBlockOrClassHasFormat = isFormatted(parentNode, formatProps);
         if (firstBlockOrClassHasFormat && !applyStyle) {
             formatSpec.addNeutralStyle && formatSpec.addNeutralStyle(getOrCreateSpan(node, inlineAncestors));
         } else if (!firstBlockOrClassHasFormat && applyStyle) {
@@ -1335,7 +1338,7 @@ export const formatSelection = (editor, formatName, {applyStyle, formatProps} = 
                 node.after(tag);
                 tag.append(node);
 
-                if (!formatSpec.isFormatted(tag, formatProps)) {
+                if (!isFormatted(tag, formatProps)) {
                     tag.after(node);
                     tag.remove();
                     formatSpec.addStyle(getOrCreateSpan(node, inlineAncestors), formatProps);
@@ -1382,7 +1385,7 @@ export const formatSelection = (editor, formatName, {applyStyle, formatProps} = 
     }
 }
 export const isLinkEligibleForZwnbsp = (editable, link) => {
-    return link.isContentEditable && editable.contains(link) && !(
+    return link.parentElement.isContentEditable && link.isContentEditable && editable.contains(link) && !(
         [link, ...link.querySelectorAll('*')].some(el => el.nodeName === 'IMG' || isBlock(el)) ||
         link.matches('nav a, a.nav-link')
     );
@@ -1627,6 +1630,17 @@ export function hasClass(node, props) {
     const element = closestElement(node);
     return element.classList.contains(props.className);
 }
+
+/**
+ * Return true if the given node has any font-size class.
+ *
+ * @param {Node} node A node to check for font-size classes.
+ * @returns {boolean}
+ */
+export function hasAnyFontSizeClass(node) {
+    return FONT_SIZE_CLASSES.find((cls) => node?.classList?.contains(cls));
+}
+
 /**
  * Return true if the given node appears in a different direction than that of
  * the editable ('ltr' or 'rtl').
@@ -1654,7 +1668,8 @@ export function hasClass(node, props) {
 export function isSelectionFormat(editable, format) {
     const selectedNodes = getTraversedNodes(editable)
         .filter((n) => n.nodeType === Node.TEXT_NODE && n.nodeValue.replaceAll(ZWNBSP_CHAR, '').length);
-    const isFormatted = formatsSpecs[format].isFormatted;
+    const isFormatted =
+        format === "setFontSizeClassName" ? hasAnyFontSizeClass : formatsSpecs[format].isFormatted;
     return selectedNodes.length && selectedNodes.every(n => isFormatted(n, editable));
 }
 
@@ -1961,6 +1976,20 @@ export function isVisible(node) {
 export function hasVisibleContent(node) {
     return [...(node?.childNodes || [])].some(n => isVisible(n));
 }
+
+/**
+ * Returns whether an element is a button
+ *
+ * @param {Node} node
+ * @returns {boolean}
+ */
+export function isButton(node) {
+    if (!node || node.nodeType !== Node.ELEMENT_NODE) {
+        return false;
+    }
+    return node.nodeName === "BUTTON" || node.classList.contains("btn");
+}
+
 const visibleCharRegex = /[^\s\u200b]|[\u00A0\u0009]$/; // contains at least a char that is always visible (TODO: 0009 shouldn't be included)
 export function isVisibleTextNode(testedNode) {
     if (!testedNode || !testedNode.length || testedNode.nodeType !== Node.TEXT_NODE) {
@@ -2448,7 +2477,7 @@ export function fillEmpty(el) {
         blockEl.appendChild(br);
         fillers.br = br;
     }
-    if (!isTangible(el) && !el.hasAttribute("data-oe-zws-empty-inline") && !el.hasChildNodes()) {
+    if (!isTangible(el) && !el.hasAttribute("data-oe-zws-empty-inline") && isEmptyBlock(el)) {
         // As soon as there is actual content in the node, the zero-width space
         // is removed by the sanitize function.
         const zws = document.createTextNode('\u200B');
@@ -3315,5 +3344,12 @@ export function isMacOS() {
 export function cleanZWS(node) {
     [node, ...descendants(node)]
         .filter(node => node.nodeType === Node.TEXT_NODE && node.nodeValue.includes('\u200B'))
-        .forEach(node => node.nodeValue = node.nodeValue.replace(/\u200B/g, ''));
+        .forEach((node) => {
+            node.nodeValue = node.nodeValue.replace(/\u200B/g, "");
+
+            // If a node becomes empty after removing ZWS, remove it.
+            if (node.nodeValue === "") {
+                node.remove();
+            }
+        });
 }

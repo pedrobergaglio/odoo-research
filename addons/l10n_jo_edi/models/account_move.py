@@ -88,6 +88,12 @@ class AccountMove(models.Model):
         )
         return super().button_draft()
 
+    def _get_fields_to_detach(self):
+        # EXTENDS account
+        fields_list = super()._get_fields_to_detach()
+        fields_list.append('l10n_jo_edi_xml_attachment_file')
+        return fields_list
+
     def _post(self, soft=True):
         # EXTENDS 'account'
         for invoice in self.filtered('l10n_jo_edi_is_needed'):
@@ -104,8 +110,8 @@ class AccountMove(models.Model):
     def _l10n_jo_build_jofotara_headers(self):
         self.ensure_one()
         return {
-            'Client-Id': self.company_id.l10n_jo_edi_client_identifier,
-            'Secret-Key': self.company_id.l10n_jo_edi_secret_key,
+            'Client-Id': self.sudo().company_id.l10n_jo_edi_client_identifier,
+            'Secret-Key': self.sudo().company_id.l10n_jo_edi_secret_key,
         }
 
     def _submit_to_jofotara(self):
@@ -140,9 +146,9 @@ class AccountMove(models.Model):
 
     def _l10n_jo_validate_config(self):
         error_msg = ''
-        if not self.company_id.l10n_jo_edi_client_identifier:
+        if not self.sudo().company_id.l10n_jo_edi_client_identifier:
             error_msg += _("Client ID is missing.\n")
-        if not self.company_id.l10n_jo_edi_secret_key:
+        if not self.sudo().company_id.l10n_jo_edi_secret_key:
             error_msg += _("Secret key is missing.\n")
         if not self.company_id.l10n_jo_edi_taxpayer_type:
             error_msg += _("Taxpayer type is missing.\n")

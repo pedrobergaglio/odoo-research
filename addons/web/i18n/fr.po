@@ -5,16 +5,16 @@
 # Translators:
 # Martin Trigaux, 2024
 # Wil Odoo, 2025
-# Manon Rondou, 2025
 # Fabien Pinckaers <fp@openerp.com>, 2025
+# Manon Rondou, 2025
 # 
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 18.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-01-27 13:04+0000\n"
+"POT-Creation-Date: 2025-02-10 13:24+0000\n"
 "PO-Revision-Date: 2024-09-25 09:42+0000\n"
-"Last-Translator: Fabien Pinckaers <fp@openerp.com>, 2025\n"
+"Last-Translator: Manon Rondou, 2025\n"
 "Language-Team: French (https://app.transifex.com/odoo/teams/41243/fr/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -2006,7 +2006,6 @@ msgstr "Copyright © 2004"
 
 #. module: web
 #. odoo-javascript
-#: code:addons/web/static/src/views/fields/image/image_field.js:0
 #: code:addons/web/static/src/views/fields/signature/signature_field.js:0
 msgid "Could not display the selected image"
 msgstr "Impossible d'afficher l'image sélectionnée"
@@ -2022,12 +2021,6 @@ msgstr "Impossible d'afficher le PDF sélectionné"
 #: code:addons/web/static/src/views/fields/google_slide_viewer/google_slide_viewer.js:0
 msgid "Could not display the selected spreadsheet"
 msgstr "Impossible d'afficher la feuille de calcul sélectionnée"
-
-#. module: web
-#. odoo-javascript
-#: code:addons/web/static/src/views/fields/image_url/image_url_field.js:0
-msgid "Could not display the specified image url."
-msgstr "Impossible d'afficher l'url de l'image spécifiée."
 
 #. module: web
 #. odoo-javascript
@@ -8467,7 +8460,7 @@ msgstr "crème renversée"
 #. odoo-javascript
 #: code:addons/web/static/src/core/emoji_picker/emoji_data.js:0
 msgid "bakery"
-msgstr "pâtisserie"
+msgstr "boulangerie"
 
 #. module: web
 #. odoo-javascript
