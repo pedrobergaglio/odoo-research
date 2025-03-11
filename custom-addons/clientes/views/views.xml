@@ -53,6 +53,7 @@
               name="Clientes" 
               sequence="10" 
               web_icon="mi_modulo_clientes,static/description/icon.png"
+              active="False"
               />
               
     <!-- Submenú para clientes -->

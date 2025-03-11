@@ -1,0 +1,152 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <!-- Vista de lista con cards para Clientes -->
+    <record id="view_custom_client_tree" model="ir.ui.view">
+        <field name="name">custom.client.tree</field>
+        <field name="model">custom.client</field>
+        <field name="arch" type="xml">
+            <list string="Clientes" create="1" delete="1" edit="0">
+                <field name="name"/>
+                <field name="category" invisible="1"/>
+                <control>
+                    <create string="Crear Cliente" context="{'default_category': 'client'}"/>
+                </control>
+            </list>
+        </field>
+    </record>
+
+    <!-- Vista Kanban con cards -->
+    <record id="view_custom_client_kanban" model="ir.ui.view">
+        <field name="name">custom.client.kanban</field>
+        <field name="model">custom.client</field>
+        <field name="arch" type="xml">
+            <kanban default_group_by="category" class="o_kanban_mobile">
+                <field name="name"/>
+                <field name="category"/>
+                <field name="image"/>
+                <templates>
+                    <t t-name="kanban-box">
+                        <div class="oe_kanban_card">
+                            <div class="oe_kanban_global_click">
+                                <field name="image" widget="image" class="oe_kanban_image"/>
+                                <div class="oe_kanban_details">
+                                    <h3>
+                                        <field name="name"/>
+                                    </h3>
+                                    <div>
+                                        <strong>Categoría:</strong> <field name="category"/>
+                                    </div>
+                                    <div>
+                                        <strong>Total Pedidos:</strong> <field name="total_amount_pedidos" widget="monetary"/>
+                                    </div>
+                                    <div>
+                                        <strong>Total Servicios:</strong> <field name="total_amount_servicios" widget="monetary"/>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </t>
+                </templates>
+            </kanban>
+        </field>
+    </record>
+
+    <!-- Vista de formulario para Clientes -->
+    <record id="view_custom_client_form" model="ir.ui.view">
+        <field name="name">custom.client.form</field>
+        <field name="model">custom.client</field>
+        <field name="arch" type="xml">
+            <form string="Cliente">
+                <sheet>
+                    <div class="oe_title">
+                        <h1>
+                            <field name="name"/>
+                        </h1>
+                    </div>
+                    <group>
+                        <group>
+                            <field name="category" required="1"/>
+                            <field name="image" widget="image" class="oe_avatar"/>
+                            <field name="email"/>
+                            <field name="phone"/>
+                            <field name="mobile"/>
+                        </group>
+                        <group>
+                            <field name="website"/>
+                            <field name="street"/>
+                            <field name="street2"/>
+                            <field name="city"/>
+                            <field name="state_id"/>
+                            <field name="country_id"/>
+                            <field name="zip"/>
+                        </group>
+                    </group>
+                    <notebook>
+                        <page string="Pedidos/Servicios">
+                            <field name="pedido_ids" invisible="1"/>
+                            <field name="servicio_ids" invisible="1"/>
+                            <group>
+                                <div class="o_form_label">Pedidos Activos</div>
+                                <field name="pedido_ids">
+                                    <list>
+                                        <field name="name" readonly="1"/>
+                                        <field name="date" readonly="1"/>
+                                        <field name="amount_total" widget="monetary" readonly="1"/>
+                                        <field name="state" readonly="1"/>
+                                    </list>
+                                </field>
+                                <div class="o_form_label">Servicios Activos</div>
+                                <field name="servicio_ids">
+                                    <list>
+                                        <field name="name" readonly="1"/>
+                                        <field name="date_servicio" string="Fecha" readonly="1"/>
+                                        <field name="amount_total" widget="monetary" readonly="1"/>
+                                        <field name="state" readonly="1"/>
+                                    </list>
+                                </field>
+                            </group>
+                        </page>
+                    </notebook>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <!-- Vista de búsqueda para filtrar por categoría -->
+    <record id="view_custom_client_search" model="ir.ui.view">
+        <field name="name">custom.client.search</field>
+        <field name="model">custom.client</field>
+        <field name="arch" type="xml">
+            <search>
+                <field name="name"/>
+                <filter string="Clientes" name="client_filter" domain="[('category', '=', 'client')]"/>
+                <filter string="Proveedores" name="supplier_filter" domain="[('category', '=', 'supplier')]"/>
+                <filter string="Ambos" name="both_filter" domain="[('category', '=', 'both')]"/>
+                <group expand="0" string="Agrupar Por">
+                    <filter string="Categoría" name="category" context="{'group_by': 'category'}"/>
+                </group>
+            </search>
+        </field>
+    </record>
+
+    <!-- Acción de ventana para Clientes -->
+    <record id="action_custom_client" model="ir.actions.act_window">
+        <field name="name">Clientes</field>
+        <field name="res_model">custom.client</field>
+        <field name="view_mode">kanban,form</field>
+        <field name="domain">[('category', '=', 'client')]</field> <!-- Filtra por categoría "Cliente" por defecto -->
+        <field name="context">{'search_default_client_filter': 1}</field>
+        <field name="views" eval="[
+            [False, 'kanban'],
+            [False, 'form']
+        ]"/>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_smiling_face">
+                Aquí puedes ver y gestionar tus clientes. Haz clic en "Crear Cliente" para agregar uno nuevo.
+            </p>
+        </field>
+    </record>
+
+    <!-- Menú para Clientes -->
+    <menuitem id="menu_custom_client_root" name="Clientes" sequence="10" action="action_custom_client"/>
+</odoo>
