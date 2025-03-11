@@ -1,17 +1,16 @@
 <?xml version="1.0" encoding="utf-8"?>
 <odoo>
-    <!-- Vista de formulario para Pedido -->
-    <record id="view_pedido_form" model="ir.ui.view">
-        <field name="name">pedido.pedido.form</field>
-        <field name="model">pedido.pedido</field>
+    <!-- Vista de formulario para Servicios Técnicos -->
+    <record id="view_servicio_form" model="ir.ui.view">
+        <field name="name">servicio.servicio.form</field>
+        <field name="model">servicio.servicio</field>
         <field name="arch" type="xml">
             <form>
                 <header>
-                    <button name="action_preparar" string="Preparar" type="object" class="oe_highlight" invisible="state != 'confirmado'"/>
-                    <button name="action_listo" string="Listo para Entrega" type="object" class="oe_highlight" invisible="state != 'en_preparacion'"/>
-                    <button name="action_entregar" string="Entregar" type="object" class="oe_highlight" invisible="state != 'listo_para_entrega'"/>
-                    <button name="action_cancelar" string="Cancelar" type="object" invisible="state not in ('confirmado', 'en_preparacion', 'listo_para_entrega')"/>
-                    <field name="state" widget="statusbar" statusbar_visible="confirmado,en_preparacion,listo_para_entrega,entregado,cancelado"/>
+                    <button name="action_terminar" string="Terminar" type="object" class="oe_highlight" invisible="state != 'confirmado'"/>
+                    <button name="action_en_proceso" string="En proceso" type="object" class="oe_highlight" invisible="state != 'confirmado'"/>
+                    <button name="action_cancelar" string="Cancelar" type="object" invisible="state not in ('confirmado', 'terminado')"/>
+                    <field name="state" widget="statusbar" statusbar_visible="confirmado,terminado,en_proceso,cancelado"/>
                 </header>
                 <sheet>
                     <div class="oe_title">
@@ -24,12 +23,12 @@
                             <field name="presupuesto_id" readonly="1"/>
                             <field name="partner_id" readonly="1"/>
                             <field name="date" readonly="1"/>
-                            <field name="date_pedido" readonly="state == 'confirmado'"/>
+                            <field name="date_servicio" readonly="state == 'confirmado'"/>
                         </group>
                         <group>
                             <field name="payment_method_id" readonly="1"/>
-                            <field name="fecha_entrega_estimada" readonly="state not in ('confirmado', 'en_preparacion')"/>
-                            <field name="direccion_entrega" readonly="state not in ('confirmado', 'en_preparacion')"/>
+                            <field name="fecha_entrega_estimada"/>
+                            <field name="direccion_entrega"/>
                             <field name="user_id" readonly="1"/>
                             <field name="company_id" groups="base.group_multi_company" readonly="1"/>
                         </group>
@@ -58,56 +57,54 @@
         </field>
     </record>
 
-    <!-- Vista de lista para mostrar Presupuestos -->
-    <record id="view_pedido_tree" model="ir.ui.view">
-        <field name="name">pedido.pedido.tree</field>
-        <field name="model">pedido.pedido</field>
+    <!-- Vista de lista para Servicios Técnicos -->
+    <record id="view_servicio_tree" model="ir.ui.view">
+        <field name="name">servicio.servicio.tree</field>
+        <field name="model">servicio.servicio</field>
         <field name="arch" type="xml">
             <list>
                 <field name="name"/>
                 <field name="presupuesto_id"/>
                 <field name="partner_id"/>
-                <field name="date"/>
+                <field name="date_servicio"/>
                 <field name="amount_total" sum="Total"/>
                 <field name="state"/>
             </list>
-        </field> 
+        </field>
     </record>
 
-    <!-- Vista de búsqueda para filtrar Presupuestos -->
-    <record id="view_pedido_search" model="ir.ui.view">
-        <field name="name">pedido.presupuesto.search</field>
-        <field name="model">pedido.pedido</field>
+    <!-- Vista de búsqueda para Servicios Técnicos -->
+    <record id="view_servicio_search" model="ir.ui.view">
+        <field name="name">servicio.servicio.search</field>
+        <field name="model">servicio.servicio</field>
         <field name="arch" type="xml">
             <search>
                 <field name="name"/>
                 <field name="partner_id"/>
-                <filter string="Presupuestos Pendientes" name="pending" domain="[('state', '=', 'presupuesto_pedido')]"/>
                 <filter string="Confirmado" name="confirmado" domain="[('state', '=', 'confirmado')]"/>
-                <filter string="En preparación" name="preparacion" domain="[('state', '=', 'en_preparacion')]"/>
-                <filter string="Listo para entregar" name="listo_para_entregar" domain="[('state', '=', 'listo_para_entregar')]"/>
-                <filter string="Entregado" name="confirmado" domain="[('state', '=', 'confirmado')]"/>
-                <filter string="Cancelado" name="confirmado" domain="[('state', '=', 'confirmado')]"/>
+                <filter string="Terminado" name="terminado" domain="[('state', '=', 'terminado')]"/>
+                <filter string="Cancelado" name="cancelado" domain="[('state', '=', 'cancelado')]"/>
                 <group expand="0" string="Agrupar Por">
                     <filter string="Cliente" name="partner" context="{'group_by': 'partner_id'}"/>
-                    <filter string="Fecha" name="date" context="{'group_by': 'date'}"/>
+                    <filter string="Fecha de Servicio" name="date_servicio" context="{'group_by': 'date_servicio'}"/>
                 </group>
             </search>
         </field>
     </record>
 
-    <!-- Acción de ventana para mostrar Presupuestos en Pedidos -->
-    <record id="action_pedido" model="ir.actions.act_window">
-        <field name="name">Pedidos</field>
-        <field name="res_model">pedido.pedido</field>
+    <!-- Acción de ventana para Servicios Técnicos -->
+    <record id="action_servicio" model="ir.actions.act_window">
+        <field name="name">Servicios Técnicos</field>
+        <field name="res_model">servicio.servicio</field>
         <field name="view_mode">list,form</field>
-        <field name="context">{'search_default_state': 'confirmado'}</field>
+        <field name="context">{'search_default_confirmado': 1}</field>
         <field name="help" type="html">
             <p class="o_view_nocontent_smiling_face">
-                Aquí puedes ver los presupuestos en estado 'Presupuesto Pedido' y crear pedidos a partir de ellos.
+                Aquí puedes ver y gestionar los servicios técnicos.
             </p>
         </field>
     </record>
 
-    <menuitem id="menu_pedido_root" name="Pedidos" sequence="10" action="action_pedido" />
+    <!-- Menú para Servicios Técnicos -->
+    <menuitem id="menu_servicio_root" name="Servicios Técnicos" sequence="10" action="action_servicio"/>
 </odoo>

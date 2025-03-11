@@ -7,7 +7,7 @@
     """,
     'category': 'Sales',
     'author': 'Tu Nombre',
-    'depends': ['base', 'mail', 'presupuestos', 'product', 'account'],  # Asegúrate de incluir 'presupuesto' si depende de tu módulo anterior
+    'depends': ['base', 'mail', 'presupuestos', 'product', 'account'],  
     'data': [
         'security/ir.model.access.csv',
         'views/pedido_views.xml',

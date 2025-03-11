@@ -35,8 +35,7 @@ class Presupuesto(models.Model):
         ('presupuesto_pedido', 'Presupuesto Pedido'),
         ('presupuesto_servicio', 'Presupuesto Servicio'),
         ('en_proceso', 'En Proceso'),
-        ('finalizado', 'Finalizado'),
-        ('cancelado', 'Cancelado')
+        ('finalizado', 'Finalizado')
     ], string='Estado', default='draft', tracking=True)
     
     # Líneas de productos
@@ -50,6 +49,44 @@ class Presupuesto(models.Model):
     company_id = fields.Many2one('res.company', string='Compañía', default=lambda self: self.env.company)
     currency_id = fields.Many2one('res.currency', string='Moneda', related='company_id.currency_id')
     
+    #Creacion de pedidos en pedidos.pedidos
+    def write(self, vals):
+        if 'state' in vals and vals['state'] == 'presupuesto_pedido':
+            for record in self:
+                # Solo crear el pedido si el estado anterior no era 'presupuesto_pedido'
+                if record.state != 'presupuesto_pedido':
+                    self._create_pedido(record)
+        return super(Presupuesto, self).write(vals)
+
+    def _create_pedido(self, presupuesto):
+        pedido = self.env['pedido.pedido'].create({
+            'name': f"Pedido de {presupuesto.name}",
+            'partner_id': presupuesto.partner_id.id,
+            'date': fields.Date.today(),
+            'presupuesto_id': presupuesto.id,
+            'state': 'confirmado',
+        })
+        return pedido
+
+    #Creacion de servicio en servicio.servicio
+    def write(self, vals):
+        if 'state' in vals and vals['state'] == 'presupuesto_servicio':
+            for record in self:
+                # Solo crear el pedido si el estado anterior no era 'presupuesto_servicio'
+                if record.state != 'presupuesto_servicio':
+                    self._create_servicio(record)
+        return super(Presupuesto, self).write(vals)
+
+    def _create_servicio(self, presupuesto):
+        servicio = self.env['servicio.servicio'].create({
+            'name': f"Servicio de {presupuesto.name}",
+            'partner_id': presupuesto.partner_id.id,
+            'date': fields.Date.today(),
+            'presupuesto_id': presupuesto.id,
+            'state': 'confirmado',
+        })
+        return servicio
+
     @api.depends('line_ids.price_subtotal', 'line_ids.price_tax')
     def _compute_amounts(self):
         for presupuesto in self:

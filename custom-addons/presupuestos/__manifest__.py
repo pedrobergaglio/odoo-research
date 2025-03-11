@@ -16,6 +16,12 @@
         'data/presupuesto_data.xml',
         'views/presupuesto_views.xml',
     ],
+    'assests': {
+        'web.assets_backend': [
+            'static/src/js/custom_statusbar.js'
+        ],
+    },
+
     'demo': [],
     'installable': True,
     'application': True,
