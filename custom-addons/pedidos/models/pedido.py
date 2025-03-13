@@ -51,16 +51,19 @@ class Pedido(models.Model):
     @api.model
     def create(self, vals):
         pedido = super(Pedido, self).create(vals)
-        if pedido.presupuesto_id.state == 'presupuesto_pedido':
+        if pedido.presupuesto_id and pedido.presupuesto_id.state == 'presupuesto_pedido':
             pedido.presupuesto_id.write({'state': 'en_proceso'})
+        
         for presupuesto_line in pedido.presupuesto_id.line_ids:
+            if not presupuesto_line.product_id.exists(): 
+                _logger.warning(f"Producto con ID {presupuesto_line.product_id.id} no encontrado, omitiendo línea.")
+                continue
             self.env['pedido.line'].create({
                 'pedido_id': pedido.id,
                 'product_id': presupuesto_line.product_id.id,
                 'name': presupuesto_line.name,
                 'quantity': presupuesto_line.quantity,
                 'price_unit': presupuesto_line.price_unit,
-                'tax_id': [(6, 0, presupuesto_line.tax_id.ids)],
             })
         return pedido
     
@@ -83,12 +86,11 @@ class PedidoLine(models.Model):
     _description = 'Línea de Pedido'
     
     pedido_id = fields.Many2one('pedido.pedido', string='Pedido', required=True, ondelete='cascade')
-    product_id = fields.Many2one('product.product', string='Producto', required=True)
+    product_id = fields.Many2one('productos.producto', string='Producto', required=True, ondelete='cascade')
     name = fields.Char('Descripción', required=True)
     quantity = fields.Float('Cantidad', default=1.0, required=True)
     price_unit = fields.Float('Precio Unitario', required=True)
-    tax_id = fields.Many2many('account.tax', string='Impuestos')
-    
+
     price_subtotal = fields.Float('Subtotal', compute='_compute_price', store=True)
     price_tax = fields.Float('Impuestos', compute='_compute_price', store=True)
     price_total = fields.Float('Total', compute='_compute_price', store=True)
@@ -96,11 +98,21 @@ class PedidoLine(models.Model):
     currency_id = fields.Many2one(related='pedido_id.currency_id', string='Moneda')
     state = fields.Selection(related='pedido_id.state', string='Estado')
     
-    @api.depends('quantity', 'price_unit', 'tax_id')
+    @api.depends('quantity', 'price_unit', 'product_id.tasa_iva')
     def _compute_price(self):
         for line in self:
             subtotal = line.quantity * line.price_unit
-            taxes = line.tax_id.compute_all(line.price_unit, line.pedido_id.currency_id, line.quantity, line.product_id, line.pedido_id.partner_id)
-            line.price_subtotal = taxes['total_excluded']
-            line.price_tax = taxes['total_included'] - taxes['total_excluded']
-            line.price_total = taxes['total_included']
+            if line.product_id and line.product_id.tasa_iva:
+                tax_rate = line.product_id.tasa_iva / 100
+                tax_amount = subtotal * tax_rate
+            else:
+                tax_amount = 0.0
+            line.price_subtotal = subtotal
+            line.price_tax = tax_amount
+            line.price_total = subtotal + tax_amount
+    
+    @api.onchange('product_id')
+    def _onchange_product_id(self):
+        if self.product_id:
+            self.name = self.product_id.name
+            self.price_unit = self.product_id.precio

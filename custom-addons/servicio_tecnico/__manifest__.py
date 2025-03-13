@@ -7,7 +7,7 @@
     """,
     'category': 'Sales',
     'author': 'Tu Nombre',
-    'depends': ['base', 'mail', 'presupuestos', 'product', 'account'],
+    'depends': ['base', 'mail', 'presupuestos', 'productos', 'account'],
     'data': [
         'security/ir.model.access.csv',
         'views/servicio_tecnico_views.xml',

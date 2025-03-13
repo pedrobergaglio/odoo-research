@@ -41,7 +41,6 @@
                                     <field name="name"/>
                                     <field name="quantity"/>
                                     <field name="price_unit"/>
-                                    <field name="tax_id" widget="many2many_tags"/>
                                     <field name="price_subtotal" sum="Total"/>
                                 </list>
                             </field>

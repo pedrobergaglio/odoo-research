@@ -126,7 +126,7 @@ class PresupuestoLine(models.Model):
     _description = 'Línea de Presupuesto'
     
     presupuesto_id = fields.Many2one('presupuesto.presupuesto', string='Presupuesto', required=True, ondelete='cascade')
-    product_id = fields.Many2one('productos.producto', string='Producto', required=True)
+    product_id = fields.Many2one('productos.producto', string='Producto', required=True, ondelete='cascade')
     name = fields.Char('Descripción', required=True)
     quantity = fields.Float('Cantidad', default=1.0, required=True)
     price_unit = fields.Float('Precio Unitario', required=True)

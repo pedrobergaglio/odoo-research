@@ -120,7 +120,6 @@
             <search>
                 <field name="name"/>
                 <filter string="Clientes" name="client_filter" domain="[('category', '=', 'client')]"/>
-                <filter string="Proveedores" name="supplier_filter" domain="[('category', '=', 'supplier')]"/>
                 <filter string="Ambos" name="both_filter" domain="[('category', '=', 'both')]"/>
                 <group expand="0" string="Agrupar Por">
                     <filter string="Categoría" name="category" context="{'group_by': 'category'}"/>
