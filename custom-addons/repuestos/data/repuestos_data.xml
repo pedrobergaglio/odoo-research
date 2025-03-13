@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+        <!-- Crear la categoría Repuestos -->
+        <record id="producto_categoria_repuestos" model="productos.categoria">
+            <field name="name">Repuestos</field>
+            <field name="code">repuesto</field>
+        </record>
+    </data>
+</odoo>

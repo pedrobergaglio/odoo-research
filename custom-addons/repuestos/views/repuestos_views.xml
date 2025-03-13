@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+        <!-- Acción para la vista de Repuestos -->
+        <record id="action_repuestos_producto" model="ir.actions.act_window">
+            <field name="name">Repuestos</field>
+            <field name="res_model">productos.producto</field>
+            <field name="view_mode">kanban,form</field>
+            <field name="domain">[('categoria_id.name', '=', 'Repuestos')]</field>
+            <field name="context">{'default_categoria_id': 5}</field> 
+            <field name="help" type="html">
+                <p class="o_view_nocontent_smiling_face">
+                    ¡No hay repuestos aún! Crea tu primer repuesto.
+                </p>
+            </field>
+        </record>
+
+        <!-- Menú principal de Repuestos -->
+        <menuitem id="menu_repuestos_root"
+                 name="Repuestos"
+                 action="action_repuestos_producto"
+                 sequence="10"/>
+
+        <!-- Vista Kanban (reutilizando la existente con filtro) -->
+        <record id="view_repuestos_producto_kanban" model="ir.ui.view">
+            <field name="name">repuestos.producto.kanban</field>
+            <field name="model">productos.producto</field>
+            <field name="inherit_id" ref="productos.view_productos_producto_kanban"/>
+            <field name="arch" type="xml">
+                <data>
+                    <xpath expr="//kanban" position="attributes">
+                        <attribute name="domain">[('categoria_id.name', '=', 'Repuestos')]</attribute>
+                    </xpath>
+                </data>
+            </field>
+        </record>
+
+        <!-- Vista Formulario (reutilizando la existente con filtro) -->
+        <record id="view_repuestos_producto_form" model="ir.ui.view">
+            <field name="name">repuestos.producto.form</field>
+            <field name="model">productos.producto</field>
+            <field name="inherit_id" ref="productos.view_productos_producto_form"/>
+            <field name="arch" type="xml">
+                <data>
+                    <xpath expr="//form" position="attributes">
+                        <attribute name="domain">[('categoria_id.name', '=', 'Repuestos')]</attribute>
+                    </xpath>
+                </data>
+            </field>
+        </record>
+    </data>
+</odoo>
