@@ -8,7 +8,7 @@
     'category': 'Sales',
     'author': 'Tu Empresa',
     'website': 'https://www.tuempresa.com',
-    'depends': ['base', 'mail', 'product', 'account'],
+    'depends': ['base', 'mail', 'productos', 'account',],
     'data': [
         'security/presupuesto_security.xml',
         'security/ir.model.access.csv',

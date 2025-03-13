@@ -6,7 +6,7 @@
     'description': """
         Módulo para actualizar precios de productos basado en su categoría y un porcentaje.
     """,
-    'depends': ['stock', 'product'],
+    'depends': ['productos'],
     'data': [
         'security/ir.model.access.csv',
         'views/price_update_views.xml',

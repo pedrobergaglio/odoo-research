@@ -1,0 +1,237 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <!-- Vista de formulario para categoría -->
+    <record id="view_productos_categoria_form" model="ir.ui.view">
+        <field name="name">productos.categoria.form</field>
+        <field name="model">productos.categoria</field>
+        <field name="arch" type="xml">
+            <form string="Categoría de Producto">
+                <sheet>
+                    <div class="oe_title">
+                        <h1>
+                            <field name="name" placeholder="Nombre de la Categoría"/>
+                        </h1>
+                    </div>
+                    <group>
+                        <group>
+                            <field name="code"/>
+                            <field name="parent_id"/>
+                        </group>
+                        <group>
+                            <field name="product_count"/>
+                            <field name="complete_name"/>
+                        </group>
+                    </group>
+                    <notebook>
+                        <page string="Descripción">
+                            <field name="description" placeholder="Descripción de la categoría..."/>
+                        </page>
+                        <page string="Subcategorías">
+                            <field name="child_ids">
+                                <list>
+                                    <field name="name"/>
+                                    <field name="code"/>
+                                    <field name="product_count"/>
+                                </list>
+                            </field>
+                        </page>
+                    </notebook>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <!-- Vista de lista para categoría -->
+    <record id="view_productos_categoria_tree" model="ir.ui.view">
+        <field name="name">productos.categoria.list</field>
+        <field name="model">productos.categoria</field>
+        <field name="arch" type="xml">
+            <list string="Categorías de Producto">
+                <field name="complete_name"/>
+                <field name="code"/>
+                <field name="product_count"/>
+            </list>
+        </field>
+    </record>
+
+    <!-- Vista de búsqueda para categoría -->
+    <record id="view_productos_categoria_search" model="ir.ui.view">
+        <field name="name">productos.categoria.search</field>
+        <field name="model">productos.categoria</field>
+        <field name="arch" type="xml">
+            <search string="Buscar Categorías">
+                <field name="name" string="Categoría" filter_domain="['|', ('name','ilike',self), ('code','ilike',self)]"/>
+                <field name="parent_id"/>
+                <group expand="0" string="Agrupar por">
+                    <filter string="Categoría Padre" name="groupby_parent" context="{'group_by':'parent_id'}"/>
+                </group>
+            </search>
+        </field>
+    </record>
+
+    <!-- Vista de formulario para producto -->
+    <record id="view_productos_producto_form" model="ir.ui.view">
+        <field name="name">productos.producto.form</field>
+        <field name="model">productos.producto</field>
+        <field name="arch" type="xml">
+            <form string="Producto">
+                <sheet>
+                    <field name="imagen" widget="image" class="oe_avatar"/>
+                    <div class="oe_title">
+                        <h1>
+                            <field name="name" placeholder="Nombre del Producto"/>
+                        </h1>
+                    </div>
+                    <notebook>
+                        <page string="Información General">
+                            <group>
+                                <group>
+                                    <field name="reference"/>
+                                    <field name="categoria_id"/>
+                                    <field name="activo"/>
+                                </group>
+                                <group>
+                                    <field name="precio"/>
+                                    <field name="tasa_iva"/>
+                                    <field name="precio_sin_iva"/>
+                                    <field name="stock"/>
+                                    <field name="valor_stock"/>
+                                </group>
+                            </group>
+                            <group string="Descripción">
+                                <field name="descripcion" nolabel="1" placeholder="Descripción detallada del producto..."/>
+                            </group>
+                        </page>
+                    </notebook>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <!-- Vista de lista para producto -->
+    <record id="view_productos_producto_tree" model="ir.ui.view">
+        <field name="name">productos.producto.list</field>
+        <field name="model">productos.producto</field>
+        <field name="arch" type="xml">
+            <list string="Productos" decoration-danger="stock&lt;=0" decoration-info="stock&gt;0 and stock&lt;10">
+                <field name="name"/>
+                <field name="reference"/>
+                <field name="categoria_id"/>
+                <field name="precio" sum="Total"/>
+                <field name="precio_sin_iva" sum="Total sin IVA"/>
+                <field name="stock" sum="Total stock"/>
+                <field name="valor_stock" sum="Valor Total"/>
+                <field name="activo" invisible="1"/>
+            </list>
+        </field>
+    </record>
+
+    <!-- Vista kanban para producto -->
+    <record id="view_productos_producto_kanban" model="ir.ui.view">
+        <field name="name">productos.producto.kanban</field>
+        <field name="model">productos.producto</field>
+        <field name="arch" type="xml">
+            <kanban>
+                <field name="name"/>
+                <field name="imagen"/>
+                <field name="precio"/>
+                <field name="stock"/>
+                <templates>
+                    <t t-name="kanban-box">
+                        <div class="oe_kanban_card">
+                            <div class="oe_kanban_global_click">
+                                <!-- Imagen con tamaño fijo -->
+                                <div class="oe_kanban_image">
+                                    <img t-att-src="kanban_image('productos.producto', 'imagen', record.id.raw_value)" 
+                                        t-att-alt="record.name.raw_value.value" 
+                                        class="img-responsive" 
+                                        width="100" 
+                                        height="100"/>
+                                </div>
+                                <!-- Detalles del producto -->
+                                <div class="oe_kanban_details">
+                                    <strong class="o_kanban_record_title">
+                                        <field name="name"/>
+                                    </strong>
+                                    <div>
+                                        <span>Price: <field name="precio"/></span>
+                                    </div>
+                                    <div>
+                                        <span>On hand: <field name="stock"/> Units</span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </t>
+                </templates>
+            </kanban>
+        </field>
+    </record>
+
+    <!-- Vista de búsqueda para producto -->
+    <record id="view_productos_producto_search" model="ir.ui.view">
+        <field name="name">productos.producto.search</field>
+        <field name="model">productos.producto</field>
+        <field name="arch" type="xml">
+            <search string="Buscar Productos">
+                <field name="name" string="Producto" filter_domain="['|', '|', ('name','ilike',self), ('reference','ilike',self), ('descripcion','ilike',self)]"/>
+                <field name="categoria_id"/>
+                <filter string="Sin Stock" name="sin_stock" domain="[('stock', '&lt;=', 0)]"/>
+                <filter string="Stock Bajo" name="stock_bajo" domain="[('stock', '&gt;', 0), ('stock', '&lt;', 10)]"/>
+                <filter string="En Stock" name="en_stock" domain="[('stock', '&gt;=', 10)]"/>
+                <filter string="Activos" name="activo" domain="[('activo', '=', True)]"/>
+                <group expand="0" string="Agrupar por">
+                    <filter string="Categoría" name="groupby_categoria" context="{'group_by':'categoria_id'}"/>
+                </group>
+            </search>
+        </field>
+    </record>
+
+    <!-- Vista de gráficos para producto -->
+    <record id="view_productos_producto_graph" model="ir.ui.view">
+        <field name="name">productos.producto.graph</field>
+        <field name="model">productos.producto</field>
+        <field name="arch" type="xml">
+            <graph string="Productos" type="bar">
+                <field name="categoria_id"/>
+                <field name="valor_stock" type="measure"/>
+            </graph>
+        </field>
+    </record>
+
+    <!-- Acción para categoría -->
+    <record id="action_productos_categoria" model="ir.actions.act_window">
+        <field name="name">Categorías</field>
+        <field name="res_model">productos.categoria</field>
+        <field name="view_mode">list,form</field>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_smiling_face">
+                Crea tu primera categoría de productos
+            </p>
+        </field>
+    </record>
+
+    <!-- Acción para producto -->
+    <record id="action_productos_producto" model="ir.actions.act_window">
+        <field name="name">Productos</field>
+        <field name="res_model">productos.producto</field>
+        <field name="view_mode">kanban,list,form,graph</field>
+        <field name="context">{'search_default_activo': 1}</field>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_smiling_face">
+                Crea tu primer producto
+            </p>
+        </field>
+    </record>
+
+    <!-- Menú raíz de la aplicación -->
+    <menuitem id="menu_productos_root" name="Productos" sequence="10"/>
+    
+    <!-- Submenús -->
+    <menuitem id="menu_productos_main" name="Productos" parent="menu_productos_root" sequence="1"/>
+    <menuitem id="menu_productos_producto" name="Productos" parent="menu_productos_main" action="action_productos_producto" sequence="1"/>
+    <menuitem id="menu_productos_categoria" name="Categorías" parent="menu_productos_main" action="action_productos_categoria" sequence="2"/>
+    
+    <!-- Menú de configuración -->
+    <menuitem id="menu_productos_config" name="Configuración" parent="menu_productos_root" sequence="99"/>
+</odoo>

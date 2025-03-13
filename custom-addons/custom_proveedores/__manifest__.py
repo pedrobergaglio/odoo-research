@@ -4,7 +4,7 @@
     'summary': 'Gestión de Proveedores Personalizados',
     'description': 'Módulo para gestionar proveedores personalizados.',
     'category': 'Purchases',
-    'depends': ['base', 'mail', 'custom_clientes'],  # Dependemos de custom_clientes para la relación
+    'depends': ['base', 'mail', 'clientes'],  # Dependemos de custom_clientes para la relación
     'data': [
         'security/ir.model.access.csv',
         'views/custom_proveedor_views.xml',

@@ -5,7 +5,7 @@ class CustomClient(models.Model):
     _description = 'Custom Client'
     _inherit = ['mail.thread', 'mail.activity.mixin']
 
-    name = fields.Char('Nombre', required=True, index=True, tracking=True)
+    name = fields.Char('Nombre', required=True)
     email = fields.Char('Correo Electrónico')
     phone = fields.Char('Teléfono')
     mobile = fields.Char('Móvil')

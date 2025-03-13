@@ -58,7 +58,7 @@
                     <group>
                         <group>
                             <field name="partner_id" options="{'no_create': True}" readonly="state != 'draft'"/>
-                            <field name="address"/>
+                            <!--<field name="address"/>-->
                             <field name="payment_method_id" options="{'no_create': True}" readonly="state != 'draft'"/>
                         </group>
                         <group>
@@ -78,7 +78,6 @@
                                     <field name="name"/>
                                     <field name="quantity"/>
                                     <field name="price_unit"/>
-                                    <field name="tax_id" widget="many2many_tags"/>
                                     <field name="price_subtotal" sum="Total"/>
                                 </list>
                             </field>

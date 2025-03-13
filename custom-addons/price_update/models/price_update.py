@@ -6,7 +6,7 @@ class PriceUpdateWizard(models.TransientModel):
     _description = 'Asistente para actualizar precios por categorías'
 
     category_ids = fields.Many2many(
-        'product.category', 
+        'productos.categoria', 
         string='Categorías de Producto', 
         required=True, 
         help="Selecciona las categorías de productos a actualizar"
@@ -31,8 +31,8 @@ class PriceUpdateWizard(models.TransientModel):
         # Iterar sobre cada categoría seleccionada
         for category in self.category_ids:
             # Buscar todos los productos en esta categoría (incluyendo subcategorías)
-            products = self.env['product.product'].search([
-                ('categ_id', 'child_of', category.id)
+            products = self.env['productos.producto'].search([
+                ('categoria_id', 'child_of', category.id)  # Cambiado de categ_id a categoria_id
             ])
             
             # Contador para esta categoría
@@ -40,12 +40,12 @@ class PriceUpdateWizard(models.TransientModel):
             
             # Actualizar precio de cada producto
             for product in products:
-                if product.lst_price:  # Verificar que el producto tenga un precio
+                if product.precio:  # Verificar que el producto tenga un precio (cambiamos lst_price por precio)
                     # Calcular nuevo precio
-                    new_price = product.lst_price * (1 + (self.percentage / 100))
+                    new_price = product.precio * (1 + (self.percentage / 100))
                     
                     # Actualizar precio
-                    product.write({'lst_price': new_price})
+                    product.write({'precio': new_price})  # Cambiado de lst_price a precio
                     category_updated_count += 1
             
             # Añadir detalles de esta categoría

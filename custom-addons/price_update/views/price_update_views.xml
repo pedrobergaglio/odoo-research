@@ -38,7 +38,7 @@
     <!-- Entrada de menú en Inventario -->
     <menuitem id="menu_price_update"
               name="Actualización de Precios"
-              parent="stock.menu_stock_root"
+              parent="productos.menu_productos_root"
               action="action_price_update"
               sequence="100"/>
 </odoo>

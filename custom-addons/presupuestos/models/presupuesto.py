@@ -19,8 +19,7 @@ class Presupuesto(models.Model):
     name = fields.Char('Número de Presupuesto', required=True, copy=False, readonly=True, 
                       default=lambda self: self.env['ir.sequence'].next_by_code('presupuesto.presupuesto'))
     
-    partner_id = fields.Many2one('res.partner', string='Cliente', required=True, tracking=True)
-    address = fields.Char(related='partner_id.contact_address', string='Dirección', readonly=True)
+    partner_id = fields.Many2one('res.partner', string='Cliente', required=True)
     date = fields.Date('Fecha', default=fields.Date.today, required=True, tracking=True)
     
     payment_method_id = fields.Many2one('account.payment.method', string='Método de Pago')
@@ -127,11 +126,10 @@ class PresupuestoLine(models.Model):
     _description = 'Línea de Presupuesto'
     
     presupuesto_id = fields.Many2one('presupuesto.presupuesto', string='Presupuesto', required=True, ondelete='cascade')
-    product_id = fields.Many2one('product.product', string='Producto', required=True)
+    product_id = fields.Many2one('productos.producto', string='Producto', required=True)
     name = fields.Char('Descripción', required=True)
     quantity = fields.Float('Cantidad', default=1.0, required=True)
     price_unit = fields.Float('Precio Unitario', required=True)
-    tax_id = fields.Many2many('account.tax', string='Impuestos')
     
     price_subtotal = fields.Float('Subtotal', compute='_compute_price', store=True)
     price_tax = fields.Float('Impuestos', compute='_compute_price', store=True)
@@ -140,18 +138,21 @@ class PresupuestoLine(models.Model):
     currency_id = fields.Many2one(related='presupuesto_id.currency_id', string='Moneda')
     state = fields.Selection(related='presupuesto_id.state', string='Estado')
     
-    @api.depends('quantity', 'price_unit', 'tax_id')
+    @api.depends('quantity', 'price_unit', 'product_id.tasa_iva')
     def _compute_price(self):
         for line in self:
             subtotal = line.quantity * line.price_unit
-            taxes = line.tax_id.compute_all(line.price_unit, line.presupuesto_id.currency_id, line.quantity, line.product_id, line.presupuesto_id.partner_id)
-            line.price_subtotal = taxes['total_excluded']
-            line.price_tax = taxes['total_included'] - taxes['total_excluded']
-            line.price_total = taxes['total_included']
+            if line.product_id and line.product_id.tasa_iva:
+                tax_rate = line.product_id.tasa_iva / 100
+                tax_amount = subtotal * tax_rate
+            else:
+                tax_amount = 0.0
+            line.price_subtotal = subtotal
+            line.price_tax = tax_amount
+            line.price_total = subtotal + tax_amount
     
     @api.onchange('product_id')
     def _onchange_product_id(self):
         if self.product_id:
             self.name = self.product_id.name
-            self.price_unit = self.product_id.list_price
-            self.tax_id = self.product_id.taxes_id
+            self.price_unit = self.product_id.precio
