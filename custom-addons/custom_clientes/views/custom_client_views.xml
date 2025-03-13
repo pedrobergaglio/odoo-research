@@ -134,7 +134,7 @@
         <field name="name">Clientes</field>
         <field name="res_model">custom.client</field>
         <field name="view_mode">kanban,form</field>
-        <field name="domain">[('category', '=', 'client')]</field> <!-- Filtra por categoría "Cliente" por defecto -->
+        <field name="domain">[('category', 'in', ('client','both'))]</field> 
         <field name="context">{'search_default_client_filter': 1}</field>
         <field name="views" eval="[
             [False, 'kanban'],

@@ -134,7 +134,7 @@
         <field name="name">Proveedores</field>
         <field name="res_model">custom.proveedor</field>
         <field name="view_mode">kanban,form</field>
-        <field name="domain">[('category', '=', 'supplier')]</field> <!-- Filtra por categoría "Proveedor" por defecto -->
+        <field name="domain">[('category', 'in', ('supplier','both'))]</field> 
         <field name="context">{'search_default_supplier_filter': 1}</field>
         <field name="views" eval="[
             [False, 'kanban'],
@@ -148,5 +148,5 @@
     </record>
 
     <!-- Menú para Proveedores -->
-    <menuitem id="menu_custom_proveedor_root" name="Custom Proveedores" sequence="20" action="action_custom_proveedor"/>
+    <menuitem id="menu_custom_proveedor_root" name="Proveedores" sequence="20" action="action_custom_proveedor"/>
 </odoo>

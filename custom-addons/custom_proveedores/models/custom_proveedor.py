@@ -18,25 +18,21 @@ class CustomProveedor(models.Model):
     zip = fields.Char('Código Postal')
     category = fields.Selection([
         ('supplier', 'Proveedor'),
-        ('client', 'Cliente'),
         ('both', 'Ambos')
     ], string='Categoría', default='supplier', required=True, tracking=True)
     image = fields.Binary('Foto', attachment=True)
     active = fields.Boolean('Activo', default=True)
 
-    # Relaciones con Pedidos y Servicios (ajusta según tu lógica para proveedores)
     pedido_ids = fields.One2many('pedido.pedido', 'partner_id', string='Pedidos Activos', domain=[('state', 'in', ['confirmado', 'en_preparacion', 'listo_para_entrega'])])
     servicio_ids = fields.One2many('servicio.servicio', 'partner_id', string='Servicios Activos', domain=[('state', 'in', ['confirmado', 'en_proceso'])])
     total_amount_pedidos = fields.Float('Total Pedidos', compute='_compute_total_amounts')
     total_amount_servicios = fields.Float('Total Servicios', compute='_compute_total_amounts')
 
-    # Campos relacionados para los Pedidos
     pedido_name = fields.Char(related='pedido_ids.name', string='Nombre del Pedido', readonly=True)
     pedido_date = fields.Date(related='pedido_ids.date', string='Fecha del Pedido', readonly=True)
     pedido_amount_total = fields.Float(related='pedido_ids.amount_total', string='Total del Pedido', readonly=True)
     pedido_state = fields.Selection(related='pedido_ids.state', string='Estado del Pedido', readonly=True)
 
-    # Campos relacionados para los Servicios
     servicio_name = fields.Char(related='servicio_ids.name', string='Nombre del Servicio', readonly=True)
     servicio_date_servicio = fields.Date(related='servicio_ids.date_servicio', string='Fecha del Servicio', readonly=True)
     servicio_amount_total = fields.Float(related='servicio_ids.amount_total', string='Total del Servicio', readonly=True)
@@ -50,10 +46,14 @@ class CustomProveedor(models.Model):
 
     @api.model
     def create(self, vals):
+        # Si está en contexto de sincronización, no crear más registros
+        if self.env.context.get('skip_sync'):
+            return super(CustomProveedor, self).create(vals)
+
         # Crear el registro en custom.proveedor
         proveedor = super(CustomProveedor, self).create(vals)
 
-        # Si la categoría es "ambos", crear un registro equivalente en custom.client
+        # Si la categoría es "ambos", crear un registro en custom.client con skip_sync
         if proveedor.category == 'both':
             client_vals = {
                 'name': proveedor.name,
@@ -67,11 +67,11 @@ class CustomProveedor(models.Model):
                 'state_id': proveedor.state_id.id,
                 'country_id': proveedor.country_id.id,
                 'zip': proveedor.zip,
-                'category': 'both',  # La categoría también será "ambos" en el cliente
+                'category': 'both',
                 'image': proveedor.image,
                 'active': proveedor.active,
             }
-            self.env['custom.client'].create(client_vals)
+            self.with_context(skip_sync=True).env['custom.client'].create(client_vals)
 
         return proveedor
 
@@ -79,9 +79,9 @@ class CustomProveedor(models.Model):
         # Actualizar el registro en custom.proveedor
         result = super(CustomProveedor, self).write(vals)
 
-        # Si la categoría cambia a "ambos" o ya es "ambos", actualizar/crear el registro en custom.client
+        # Si la categoría es "ambos", actualizar o crear en custom.client
         for proveedor in self:
-            if proveedor.category == 'both':
+            if proveedor.category == 'both' and not self.env.context.get('skip_sync'):
                 client = self.env['custom.client'].search([('name', '=', proveedor.name), ('category', '=', 'both')], limit=1)
                 client_vals = {
                     'name': proveedor.name,
@@ -100,9 +100,9 @@ class CustomProveedor(models.Model):
                     'active': proveedor.active,
                 }
                 if client:
-                    client.write(client_vals)
+                    client.with_context(skip_sync=True).write(client_vals)
                 else:
-                    self.env['custom.client'].create(client_vals)
+                    self.with_context(skip_sync=True).env['custom.client'].create(client_vals)
 
         return result
 
