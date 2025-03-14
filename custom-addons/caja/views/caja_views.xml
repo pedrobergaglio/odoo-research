@@ -1,0 +1,87 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <!-- Vista de formulario -->
+    <record id="view_caja_movimiento_form" model="ir.ui.view">
+        <field name="name">caja.movimiento.form</field>
+        <field name="model">caja.movimiento</field>
+        <field name="arch" type="xml">
+            <form string="Movimiento de Caja">
+                <sheet>
+                    <group>
+                        <field name="id_movimiento"/>
+                        <field name="fecha"/>
+                        <field name="categoria"/>
+                        <field name="metodo_pago"/>
+                        <field name="monto" decoration-danger="monto &lt; 0" decoration-success="monto &gt; 0"/>
+                        <field name="aclaracion"/>
+                        <field name="saldo_caja"/>
+                    </group>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <!-- Vista de árbol (tabla) -->
+    <record id="view_caja_movimiento_tree" model="ir.ui.view">
+        <field name="name">caja.movimiento.tree</field>
+        <field name="model">caja.movimiento</field>
+        <field name="arch" type="xml">
+            <list string="Movimientos de Caja" decoration-danger="monto &lt; 0" decoration-success="monto &gt; 0">
+                <field name="id_movimiento"/>
+                <field name="fecha"/>
+                <field name="categoria"/>
+                <field name="metodo_pago"/>
+                <field name="monto"/>
+                <field name="aclaracion"/>
+                <field name="saldo_caja"/>
+            </list>
+        </field>
+    </record>
+
+    <!-- Vista de búsqueda -->
+    <record id="view_caja_movimiento_search" model="ir.ui.view">
+        <field name="name">caja.movimiento.search</field>
+        <field name="model">caja.movimiento</field>
+        <field name="arch" type="xml">
+            <search string="Buscar Movimientos">
+                <field name="id_movimiento"/>
+                <field name="aclaracion"/>
+                <field name="fecha"/>
+                <filter string="Clientes" name="cliente" domain="[('categoria','=','cliente')]"/>
+                <filter string="Depósitos" name="deposito" domain="[('categoria','=','deposito')]"/>
+                <filter string="Empleados" name="empleado" domain="[('categoria','=','empleado')]"/>
+                <filter string="Proveedores" name="proveedor" domain="[('categoria','=','proveedor')]"/>
+                <filter string="Otros" name="otro" domain="[('categoria','=','otro')]"/>
+                <separator/>
+                <filter string="Dólares" name="dolares" domain="[('metodo_pago','=','dolares')]"/>
+                <filter string="Efectivo" name="efectivo" domain="[('metodo_pago','=','efectivo')]"/>
+                <filter string="Transferencia" name="transferencia" domain="[('metodo_pago','=','transferencia')]"/>
+                <separator/>
+                <filter string="Ingresos" name="ingresos" domain="[('monto','&gt;',0)]"/>
+                <filter string="Egresos" name="egresos" domain="[('monto','&lt;',0)]"/>
+                <group expand="0" string="Agrupar por">
+                    <filter string="Categoría" name="group_by_categoria" context="{'group_by':'categoria'}"/>
+                    <filter string="Método de Pago" name="group_by_metodo" context="{'group_by':'metodo_pago'}"/>
+                    <filter string="Fecha" name="group_by_fecha" context="{'group_by':'fecha:day'}"/>
+                </group>
+            </search>
+        </field>
+    </record>
+
+    <!-- Acción de ventana -->
+    <record id="action_caja_movimiento" model="ir.actions.act_window">
+        <field name="name">Movimientos de Caja</field>
+        <field name="res_model">caja.movimiento</field>
+        <field name="view_mode">list,form</field>
+        <field name="search_view_id" ref="view_caja_movimiento_search"/>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_smiling_face">
+                Registre su primer movimiento de caja
+            </p>
+        </field>
+    </record>
+
+    <!-- Menú principal -->
+    <menuitem id="menu_caja_root" name="Caja" sequence="10"/>
+    <menuitem id="menu_caja_movimiento" name="Movimientos" parent="menu_caja_root" action="action_caja_movimiento" sequence="1"/>
+</odoo>
